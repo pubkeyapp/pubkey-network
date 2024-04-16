@@ -1,0 +1,3 @@
+mutation solanaSignAndConfirmTransaction($tx: [Int!]!) {
+  signature: solanaSignAndConfirmTransaction(tx: $tx)
+}

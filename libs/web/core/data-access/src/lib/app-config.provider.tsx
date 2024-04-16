@@ -1,5 +1,6 @@
 import { AppConfig, IdentityProvider } from '@pubkey-network/sdk'
 import { toastError } from '@pubkey-ui/core'
+import { PublicKey } from '@solana/web3.js'
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 
 // This is provided by /api/__/env.js included in index.html
@@ -13,6 +14,7 @@ export interface AuthProviderContext {
   appConfig?: AppConfig | undefined
   authEnabled: boolean
   enabledProviders: IdentityProvider[]
+  feePayer: PublicKey
 }
 
 const Context = createContext<AuthProviderContext>({} as AuthProviderContext)
@@ -58,6 +60,7 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
     appConfig,
     authEnabled,
     enabledProviders,
+    feePayer: new PublicKey(appConfig.solanaFeePayer),
   }
 
   return <Context.Provider value={value}>{children}</Context.Provider>

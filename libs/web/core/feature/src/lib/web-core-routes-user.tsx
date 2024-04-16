@@ -1,13 +1,15 @@
 import { UiDashboard } from '@pubkey-network/web-core-ui'
+import { UserProfileRoutes } from '@pubkey-network/web-profile-feature'
 import { SettingsFeature } from '@pubkey-network/web-settings-feature'
 import { SolanaFeature } from '@pubkey-network/web-solana-feature'
 import { UserFeature } from '@pubkey-network/web-user-feature'
 import { UiDashboardItem, UiNotFound } from '@pubkey-ui/core'
-import { IconCurrencySolana, IconSettings, IconUsers } from '@tabler/icons-react'
+import { IconCurrencySolana, IconSettings, IconUser, IconUsers } from '@tabler/icons-react'
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
 
 const links: UiDashboardItem[] = [
   // User Dashboard Links are added by the web-crud generator
+  { label: 'Profile', icon: IconUser, to: '/profile' },
   { label: 'Settings', icon: IconSettings, to: '/settings' },
   { label: 'Solana', icon: IconCurrencySolana, to: '/solana' },
   { label: 'Users', icon: IconUsers, to: '/u' },
@@ -15,6 +17,7 @@ const links: UiDashboardItem[] = [
 
 const routes: RouteObject[] = [
   // User Dashboard Routes are added by the web-crud generator
+  { path: '/profile/*', element: <UserProfileRoutes /> },
   { path: '/settings/*', element: <SettingsFeature /> },
   { path: '/solana/*', element: <SolanaFeature /> },
   { path: '/u/*', element: <UserFeature /> },

@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common'
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ApiAuthGraphQLUserGuard } from '@pubkey-network/api-auth-data-access'
 import { ApiSolanaService } from '@pubkey-network/api-solana-data-access'
 import { GraphQLJSON } from 'graphql-scalars'
@@ -27,5 +27,10 @@ export class ApiSolanaResolver {
   @Mutation(() => GraphQLJSON, { nullable: true })
   solanaRequestAirdrop(@Args('account') account: string) {
     return this.service.solanaRequestAirdrop(account)
+  }
+
+  @Mutation(() => String, { nullable: true })
+  solanaSignAndConfirmTransaction(@Args({ name: 'tx', type: () => [Int] }) tx: Uint8Array) {
+    return this.service.solanaSignAndConfirmTransaction(tx)
   }
 }

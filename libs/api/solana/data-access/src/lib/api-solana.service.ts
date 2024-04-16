@@ -6,7 +6,15 @@ import { ApiCoreService, CORE_APP_STARTED } from '@pubkey-network/api-core-data-
 import { AnchorKeypairWallet } from '@pubkey-program-library/sdk'
 import { getMint, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { TokenMetadata } from '@solana/spl-token-metadata'
-import { AccountInfo, Connection, Keypair, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey } from '@solana/web3.js'
+import {
+  AccountInfo,
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL,
+  ParsedAccountData,
+  PublicKey,
+  VersionedTransaction,
+} from '@solana/web3.js'
 
 export type SolanaAccountInfo = AccountInfo<ParsedAccountData>
 
@@ -104,5 +112,46 @@ export class ApiSolanaService {
         // Yeah, yeah. I know you can have multiple token accounts for the same mint. Hackathon code baby!
         return res.value?.length ? res.value[0].account.data.parsed.info.tokenAmount.uiAmount : 0
       })
+  }
+
+  getExplorerUrl(path: string) {
+    const cluster = this.connection.rpcEndpoint.includes('devnet') ? `?cluster=devnet` : ''
+
+    return `https://explorer.solana.com/${path}${cluster}`
+  }
+
+  async sendAndConfirmTransaction({
+    transaction,
+    blockhash,
+    lastValidBlockHeight,
+  }: {
+    transaction: VersionedTransaction
+    blockhash: string
+    lastValidBlockHeight: number
+  }): Promise<string> {
+    const signature = await this.connection.sendTransaction(transaction, { skipPreflight: true })
+    this.logger.debug(`Signature: ${this.getExplorerUrl(`tx/${signature}`)}`)
+    await this.connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature }, 'confirmed')
+    this.logger.debug(`Confirmed: ${signature}`)
+    return signature
+  }
+
+  async solanaSignAndConfirmTransaction(tx: Uint8Array) {
+    // TODO: Add validation to the incoming transaction
+
+    const { blockhash, lastValidBlockHeight } = await this.connection.getLatestBlockhash()
+
+    const transaction = VersionedTransaction.deserialize(tx)
+
+    transaction.sign([this.core.config.solanaFeePayer])
+
+    console.log(`transaction`, transaction)
+    console.log(`transaction`, transaction.signatures)
+
+    return this.sendAndConfirmTransaction({
+      transaction,
+      blockhash,
+      lastValidBlockHeight,
+    })
   }
 }

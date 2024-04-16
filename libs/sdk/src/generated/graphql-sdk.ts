@@ -33,6 +33,7 @@ export type AppConfig = {
   authRegisterEnabled: Scalars['Boolean']['output']
   authSolanaEnabled: Scalars['Boolean']['output']
   authTwitterEnabled: Scalars['Boolean']['output']
+  solanaFeePayer: Scalars['String']['output']
 }
 
 export type Identity = {
@@ -119,10 +120,12 @@ export type Mutation = {
   adminDeleteUser?: Maybe<Scalars['Boolean']['output']>
   adminUpdateUser?: Maybe<User>
   anonVerifyIdentityChallenge?: Maybe<IdentityChallenge>
+  createUserProfile: Array<Scalars['Int']['output']>
   login?: Maybe<User>
   logout?: Maybe<Scalars['Boolean']['output']>
   register?: Maybe<User>
   solanaRequestAirdrop?: Maybe<Scalars['JSON']['output']>
+  solanaSignAndConfirmTransaction?: Maybe<Scalars['String']['output']>
   userDeleteIdentity?: Maybe<Scalars['Boolean']['output']>
   userLinkIdentity?: Maybe<Identity>
   userUpdateUser?: Maybe<User>
@@ -154,6 +157,10 @@ export type MutationAnonVerifyIdentityChallengeArgs = {
   input: IdentityVerifyChallengeInput
 }
 
+export type MutationCreateUserProfileArgs = {
+  publicKey: Scalars['String']['input']
+}
+
 export type MutationLoginArgs = {
   input: LoginInput
 }
@@ -164,6 +171,10 @@ export type MutationRegisterArgs = {
 
 export type MutationSolanaRequestAirdropArgs = {
   account: Scalars['String']['input']
+}
+
+export type MutationSolanaSignAndConfirmTransactionArgs = {
+  tx: Array<Scalars['Int']['input']>
 }
 
 export type MutationUserDeleteIdentityArgs = {
@@ -200,6 +211,8 @@ export type Query = {
   adminFindOneUser?: Maybe<User>
   anonRequestIdentityChallenge?: Maybe<IdentityChallenge>
   appConfig: AppConfig
+  getUserProfile: Scalars['JSON']['output']
+  getUserProfiles: Scalars['JSON']['output']
   me?: Maybe<User>
   solanaGetBalance?: Maybe<Scalars['String']['output']>
   solanaGetTokenAccounts?: Maybe<Scalars['JSON']['output']>
@@ -400,6 +413,7 @@ export type AppConfigDetailsFragment = {
   authRegisterEnabled: boolean
   authSolanaEnabled: boolean
   authTwitterEnabled: boolean
+  solanaFeePayer: string
 }
 
 export type PagingMetaDetailsFragment = {
@@ -430,6 +444,7 @@ export type AppConfigQuery = {
     authRegisterEnabled: boolean
     authSolanaEnabled: boolean
     authTwitterEnabled: boolean
+    solanaFeePayer: string
   }
 }
 
@@ -667,6 +682,26 @@ export type AnonVerifyIdentityChallengeMutation = {
   } | null
 }
 
+export type CreateUserProfileMutationVariables = Exact<{
+  publicKey: Scalars['String']['input']
+}>
+
+export type CreateUserProfileMutation = { __typename?: 'Mutation'; created: Array<number> }
+
+export type GetUserProfileQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetUserProfileQuery = { __typename?: 'Query'; item: any }
+
+export type GetUserProfilesQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetUserProfilesQuery = { __typename?: 'Query'; items: any }
+
+export type SolanaSignAndConfirmTransactionMutationVariables = Exact<{
+  tx: Array<Scalars['Int']['input']> | Scalars['Int']['input']
+}>
+
+export type SolanaSignAndConfirmTransactionMutation = { __typename?: 'Mutation'; signature?: string | null }
+
 export type UserDetailsFragment = {
   __typename?: 'User'
   avatarUrl?: string | null
@@ -883,6 +918,7 @@ export const AppConfigDetailsFragmentDoc = gql`
     authRegisterEnabled
     authSolanaEnabled
     authTwitterEnabled
+    solanaFeePayer
   }
 `
 export const PagingMetaDetailsFragmentDoc = gql`
@@ -1062,6 +1098,26 @@ export const AnonVerifyIdentityChallengeDocument = gql`
   }
   ${IdentityChallengeDetailsFragmentDoc}
 `
+export const CreateUserProfileDocument = gql`
+  mutation createUserProfile($publicKey: String!) {
+    created: createUserProfile(publicKey: $publicKey)
+  }
+`
+export const GetUserProfileDocument = gql`
+  query getUserProfile {
+    item: getUserProfile
+  }
+`
+export const GetUserProfilesDocument = gql`
+  query getUserProfiles {
+    items: getUserProfiles
+  }
+`
+export const SolanaSignAndConfirmTransactionDocument = gql`
+  mutation solanaSignAndConfirmTransaction($tx: [Int!]!) {
+    signature: solanaSignAndConfirmTransaction(tx: $tx)
+  }
+`
 export const AdminCreateUserDocument = gql`
   mutation adminCreateUser($input: UserAdminCreateInput!) {
     created: adminCreateUser(input: $input) {
@@ -1164,6 +1220,10 @@ const UserVerifyIdentityChallengeDocumentString = print(UserVerifyIdentityChalle
 const UserLinkIdentityDocumentString = print(UserLinkIdentityDocument)
 const AnonRequestIdentityChallengeDocumentString = print(AnonRequestIdentityChallengeDocument)
 const AnonVerifyIdentityChallengeDocumentString = print(AnonVerifyIdentityChallengeDocument)
+const CreateUserProfileDocumentString = print(CreateUserProfileDocument)
+const GetUserProfileDocumentString = print(GetUserProfileDocument)
+const GetUserProfilesDocumentString = print(GetUserProfilesDocument)
+const SolanaSignAndConfirmTransactionDocumentString = print(SolanaSignAndConfirmTransactionDocument)
 const AdminCreateUserDocumentString = print(AdminCreateUserDocument)
 const AdminDeleteUserDocumentString = print(AdminDeleteUserDocument)
 const AdminFindManyUserDocumentString = print(AdminFindManyUserDocument)
@@ -1473,6 +1533,91 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'anonVerifyIdentityChallenge',
+        'mutation',
+        variables,
+      )
+    },
+    createUserProfile(
+      variables: CreateUserProfileMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: CreateUserProfileMutation
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateUserProfileMutation>(CreateUserProfileDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'createUserProfile',
+        'mutation',
+        variables,
+      )
+    },
+    getUserProfile(
+      variables?: GetUserProfileQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: GetUserProfileQuery
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<GetUserProfileQuery>(GetUserProfileDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'getUserProfile',
+        'query',
+        variables,
+      )
+    },
+    getUserProfiles(
+      variables?: GetUserProfilesQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: GetUserProfilesQuery
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<GetUserProfilesQuery>(GetUserProfilesDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'getUserProfiles',
+        'query',
+        variables,
+      )
+    },
+    solanaSignAndConfirmTransaction(
+      variables: SolanaSignAndConfirmTransactionMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: SolanaSignAndConfirmTransactionMutation
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<SolanaSignAndConfirmTransactionMutation>(
+            SolanaSignAndConfirmTransactionDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'solanaSignAndConfirmTransaction',
         'mutation',
         variables,
       )

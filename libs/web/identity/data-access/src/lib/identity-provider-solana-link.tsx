@@ -18,9 +18,12 @@ const Context = createContext<IdentityProviderSolanaContext>({} as IdentityProvi
 
 export function IdentityProviderSolanaLink({ children, refresh }: { children: ReactNode; refresh: () => void }) {
   const sdk = useSdk()
+  console.log(`sdk`, sdk)
   const { signMessage } = useWallet()
   const createSignature = useCreateSignature()
+
   async function linkIdentity({ publicKey }: { publicKey: string }) {
+    console.log(`sdk`, sdk)
     return sdk
       .userLinkIdentity({ input: { provider: IdentityProvider.Solana, providerId: publicKey } })
       .then((res) => {

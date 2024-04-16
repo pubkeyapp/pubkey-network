@@ -1,0 +1,11 @@
+mutation createUserProfile($publicKey: String!) {
+  created: createUserProfile(publicKey: $publicKey)
+}
+
+query getUserProfile {
+  item: getUserProfile
+}
+
+query getUserProfiles {
+  items: getUserProfiles
+}

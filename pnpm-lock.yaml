@@ -74,9 +74,12 @@ dependencies:
   '@prisma/client':
     specifier: 5.8.0
     version: 5.8.0(prisma@5.8.0)
+  '@pubkey-program-library/anchor':
+    specifier: ^1.1.0
+    version: 1.1.0
   '@pubkey-program-library/sdk':
-    specifier: ^1.0.1
-    version: 1.0.1
+    specifier: ^1.1.0
+    version: 1.1.0
   '@pubkey-ui/core':
     specifier: ^1.7.0
     version: 1.7.0(@types/react@18.2.47)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
@@ -5722,8 +5725,20 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@pubkey-program-library/sdk@1.0.1:
-    resolution: {integrity: sha512-UO9j25LjpFnmlOxkWnk/PkXiw9SItpZ+ChRHgYo4LjDKYTKfDeZzJ1hxYNSIaZqoNuvHpxwbn9yJr0N96ZYkxA==}
+  /@pubkey-program-library/anchor@1.1.0:
+    resolution: {integrity: sha512-4ceDEWVZg4oIL0YdgYJUSy0EQ7thAKmonWCA2L8NNsMgHV7mLI8TrKZThH+Gnib6xfOjFBQtAmVxRlqF8egMbQ==}
+    dependencies:
+      '@coral-xyz/anchor': 0.29.0
+      '@noble/hashes': 1.4.0
+      '@solana/web3.js': 1.91.4
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+    dev: false
+
+  /@pubkey-program-library/sdk@1.1.0:
+    resolution: {integrity: sha512-tcrq2M4LkmfulXmJe6MgOFhTv9l1luSAMn/lY5rfw92fr7bd6ZppNA2JNvPz+26khFZ+4/TA9kx3ZaNbaQiyAw==}
     dependencies:
       '@coral-xyz/anchor': 0.29.0
       '@pubkey-program-library/anchor': 1.0.0

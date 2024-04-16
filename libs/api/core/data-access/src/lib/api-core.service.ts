@@ -38,4 +38,11 @@ export class ApiCoreService {
   envJson() {
     return this.config.appConfig
   }
+
+  async getUserById(userId: string) {
+    return this.data.user.findUnique({
+      where: { id: userId },
+      include: { identities: true },
+    })
+  }
 }

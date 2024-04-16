@@ -24,6 +24,7 @@ export class ApiCoreConfigService {
       authRegisterEnabled: this.authRegisterEnabled,
       authSolanaEnabled: this.authSolanaEnabled,
       authTwitterEnabled: this.authTwitterEnabled,
+      solanaFeePayer: this.solanaFeePayer.publicKey.toString(),
     }
   }
 
