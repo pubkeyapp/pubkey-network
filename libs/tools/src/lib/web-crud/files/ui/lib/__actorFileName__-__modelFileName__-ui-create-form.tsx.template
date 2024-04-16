@@ -1,0 +1,30 @@
+import { Button, Group, TextInput } from '@mantine/core'
+import { useForm } from '@mantine/form'
+import { <%= model.className %><%= actor.className %>CreateInput } from '@<%= npmScope %>/sdk'
+import { UiStack } from '@pubkey-ui/core'
+
+export function <%= actor.className %><%= model.className %>UiCreateForm({ submit }: { submit: (res: <%= model.className %><%= actor.className %>CreateInput) => Promise<boolean> }) {
+  const form = useForm<<%= model.className %><%= actor.className %>CreateInput>({
+    initialValues: {
+      <% for (let field of fields){ %>
+        <%= field.name %>: '',
+      <% } %>
+      <% if(ownerId && actor.className === 'Admin'){ %>
+        <%= ownerId %>: '',
+      <% } %>
+    },
+  })
+
+  return (
+    <form onSubmit={form.onSubmit((values) => submit(values))}>
+      <UiStack>
+        <% for (let field of fields){ %>
+          <TextInput required name="<%= field.name %>" label="<%= field.name %>" {...form.getInputProps('<%= field.name %>')} />
+        <% } %>
+        <Group justify="right">
+          <Button type="submit">Save</Button>
+        </Group>
+      </UiStack>
+    </form>
+  )
+}
