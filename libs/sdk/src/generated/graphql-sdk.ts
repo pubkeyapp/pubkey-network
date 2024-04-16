@@ -122,6 +122,7 @@ export type Mutation = {
   login?: Maybe<User>
   logout?: Maybe<Scalars['Boolean']['output']>
   register?: Maybe<User>
+  solanaRequestAirdrop?: Maybe<Scalars['JSON']['output']>
   userDeleteIdentity?: Maybe<Scalars['Boolean']['output']>
   userLinkIdentity?: Maybe<Identity>
   userUpdateUser?: Maybe<User>
@@ -161,6 +162,10 @@ export type MutationRegisterArgs = {
   input: RegisterInput
 }
 
+export type MutationSolanaRequestAirdropArgs = {
+  account: Scalars['String']['input']
+}
+
 export type MutationUserDeleteIdentityArgs = {
   identityId: Scalars['String']['input']
 }
@@ -196,6 +201,9 @@ export type Query = {
   anonRequestIdentityChallenge?: Maybe<IdentityChallenge>
   appConfig: AppConfig
   me?: Maybe<User>
+  solanaGetBalance?: Maybe<Scalars['String']['output']>
+  solanaGetTokenAccounts?: Maybe<Scalars['JSON']['output']>
+  solanaGetTransactions?: Maybe<Scalars['JSON']['output']>
   uptime: Scalars['Float']['output']
   userFindManyIdentity?: Maybe<Array<Identity>>
   userFindManyUser: UserPaging
@@ -217,6 +225,18 @@ export type QueryAdminFindOneUserArgs = {
 
 export type QueryAnonRequestIdentityChallengeArgs = {
   input: IdentityRequestChallengeInput
+}
+
+export type QuerySolanaGetBalanceArgs = {
+  account: Scalars['String']['input']
+}
+
+export type QuerySolanaGetTokenAccountsArgs = {
+  account: Scalars['String']['input']
+}
+
+export type QuerySolanaGetTransactionsArgs = {
+  account: Scalars['String']['input']
 }
 
 export type QueryUserFindManyIdentityArgs = {

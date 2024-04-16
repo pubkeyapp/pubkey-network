@@ -106,6 +106,7 @@ type Mutation {
   login(input: LoginInput!): User
   logout: Boolean
   register(input: RegisterInput!): User
+  solanaRequestAirdrop(account: String!): JSON
   userDeleteIdentity(identityId: String!): Boolean
   userLinkIdentity(input: IdentityUserLinkInput!): Identity
   userUpdateUser(input: UserUserUpdateInput!): User
@@ -129,6 +130,9 @@ type Query {
   anonRequestIdentityChallenge(input: IdentityRequestChallengeInput!): IdentityChallenge
   appConfig: AppConfig!
   me: User
+  solanaGetBalance(account: String!): String
+  solanaGetTokenAccounts(account: String!): JSON
+  solanaGetTransactions(account: String!): JSON
   uptime: Float!
   userFindManyIdentity(input: IdentityUserFindManyInput!): [Identity!]
   userFindManyUser(input: UserUserFindManyInput!): UserPaging!
