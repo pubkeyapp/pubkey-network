@@ -1,13 +1,26 @@
-import { PubKeyIdentityProvider } from '@pubkey-program-library/anchor'
-import { IconBrandDiscordFilled, IconCurrencySolana } from '@tabler/icons-react'
+import { AppIdentityProvider } from '@pubkey-network/sdk'
+import {
+  IconBrandDiscordFilled,
+  IconBrandGithubFilled,
+  IconBrandGoogleFilled,
+  IconBrandTwitterFilled,
+  IconCurrencySolana,
+  IconQuestionMark,
+} from '@tabler/icons-react'
 
-export function PubkeyProfileUiProvider({ provider, size = 24 }: { provider: PubKeyIdentityProvider; size?: number }) {
-  switch (provider) {
-    case PubKeyIdentityProvider.Discord:
+export function PubkeyProfileUiProvider({ provider, size = 24 }: { provider: AppIdentityProvider; size?: number }) {
+  switch (provider.toString().toLowerCase()) {
+    case 'discord':
       return <IconBrandDiscordFilled size={size} />
-    case PubKeyIdentityProvider.Solana:
+    case 'github':
+      return <IconBrandGithubFilled size={size} />
+    case 'google':
+      return <IconBrandGoogleFilled size={size} />
+    case 'solana':
       return <IconCurrencySolana size={size} />
+    case 'twitter':
+      return <IconBrandTwitterFilled size={size} />
     default:
-      return null
+      return <IconQuestionMark size={size} />
   }
 }

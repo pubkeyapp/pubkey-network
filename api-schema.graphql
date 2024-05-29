@@ -104,12 +104,16 @@ type Mutation {
   adminDeleteUser(userId: String!): Boolean
   adminUpdateUser(input: UserAdminUpdateInput!, userId: String!): User
   anonVerifyIdentityChallenge(input: IdentityVerifyChallengeInput!): IdentityChallenge
+  checkUserProfile: JSON
   createUserProfile(publicKey: String!): [Int!]!
   login(input: LoginInput!): User
   logout: Boolean
+  profileIdentityAdd(provider: IdentityProvider!, providerId: String!, publicKey: String!): [Int!]!
+  profileIdentityRemove(provider: IdentityProvider!, providerId: String!, publicKey: String!): [Int!]!
   register(input: RegisterInput!): User
   solanaRequestAirdrop(account: String!): JSON
   solanaSignAndConfirmTransaction(tx: [Int!]!): String
+  syncUserProfile: JSON
   userDeleteIdentity(identityId: String!): Boolean
   userLinkIdentity(input: IdentityUserLinkInput!): Identity
   userUpdateUser(input: UserUserUpdateInput!): User
@@ -133,6 +137,7 @@ type Query {
   anonRequestIdentityChallenge(input: IdentityRequestChallengeInput!): IdentityChallenge
   appConfig: AppConfig!
   getUserProfile: JSON!
+  getUserProfileByUsername(username: String!): JSON!
   getUserProfiles: JSON!
   me: User
   solanaGetBalance(account: String!): String

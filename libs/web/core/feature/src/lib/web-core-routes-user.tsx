@@ -1,5 +1,5 @@
 import { UiDashboard } from '@pubkey-network/web-core-ui'
-import { UserProfileRoutes } from '@pubkey-network/web-profile-feature'
+import { UserDirectoryRoutes, UserProfileRoutes } from '@pubkey-network/web-profile-feature'
 import { SettingsFeature } from '@pubkey-network/web-settings-feature'
 import { SolanaFeature } from '@pubkey-network/web-solana-feature'
 import { UserFeature } from '@pubkey-network/web-user-feature'
@@ -18,6 +18,7 @@ const links: UiDashboardItem[] = [
 const routes: RouteObject[] = [
   // User Dashboard Routes are added by the web-crud generator
   { path: '/profile/*', element: <UserProfileRoutes /> },
+  { path: '/directory/*', element: <UserDirectoryRoutes /> },
   { path: '/settings/*', element: <SettingsFeature /> },
   { path: '/solana/*', element: <SolanaFeature /> },
   { path: '/u/*', element: <UserFeature /> },

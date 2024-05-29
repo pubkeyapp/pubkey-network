@@ -120,12 +120,16 @@ export type Mutation = {
   adminDeleteUser?: Maybe<Scalars['Boolean']['output']>
   adminUpdateUser?: Maybe<User>
   anonVerifyIdentityChallenge?: Maybe<IdentityChallenge>
+  checkUserProfile?: Maybe<Scalars['JSON']['output']>
   createUserProfile: Array<Scalars['Int']['output']>
   login?: Maybe<User>
   logout?: Maybe<Scalars['Boolean']['output']>
+  profileIdentityAdd: Array<Scalars['Int']['output']>
+  profileIdentityRemove: Array<Scalars['Int']['output']>
   register?: Maybe<User>
   solanaRequestAirdrop?: Maybe<Scalars['JSON']['output']>
   solanaSignAndConfirmTransaction?: Maybe<Scalars['String']['output']>
+  syncUserProfile?: Maybe<Scalars['JSON']['output']>
   userDeleteIdentity?: Maybe<Scalars['Boolean']['output']>
   userLinkIdentity?: Maybe<Identity>
   userUpdateUser?: Maybe<User>
@@ -163,6 +167,18 @@ export type MutationCreateUserProfileArgs = {
 
 export type MutationLoginArgs = {
   input: LoginInput
+}
+
+export type MutationProfileIdentityAddArgs = {
+  provider: IdentityProvider
+  providerId: Scalars['String']['input']
+  publicKey: Scalars['String']['input']
+}
+
+export type MutationProfileIdentityRemoveArgs = {
+  provider: IdentityProvider
+  providerId: Scalars['String']['input']
+  publicKey: Scalars['String']['input']
 }
 
 export type MutationRegisterArgs = {
@@ -212,6 +228,7 @@ export type Query = {
   anonRequestIdentityChallenge?: Maybe<IdentityChallenge>
   appConfig: AppConfig
   getUserProfile: Scalars['JSON']['output']
+  getUserProfileByUsername: Scalars['JSON']['output']
   getUserProfiles: Scalars['JSON']['output']
   me?: Maybe<User>
   solanaGetBalance?: Maybe<Scalars['String']['output']>
@@ -238,6 +255,10 @@ export type QueryAdminFindOneUserArgs = {
 
 export type QueryAnonRequestIdentityChallengeArgs = {
   input: IdentityRequestChallengeInput
+}
+
+export type QueryGetUserProfileByUsernameArgs = {
+  username: Scalars['String']['input']
 }
 
 export type QuerySolanaGetBalanceArgs = {
@@ -688,9 +709,39 @@ export type CreateUserProfileMutationVariables = Exact<{
 
 export type CreateUserProfileMutation = { __typename?: 'Mutation'; created: Array<number> }
 
+export type ProfileIdentityAddMutationVariables = Exact<{
+  publicKey: Scalars['String']['input']
+  provider: IdentityProvider
+  providerId: Scalars['String']['input']
+}>
+
+export type ProfileIdentityAddMutation = { __typename?: 'Mutation'; tx: Array<number> }
+
+export type ProfileIdentityRemoveMutationVariables = Exact<{
+  publicKey: Scalars['String']['input']
+  provider: IdentityProvider
+  providerId: Scalars['String']['input']
+}>
+
+export type ProfileIdentityRemoveMutation = { __typename?: 'Mutation'; tx: Array<number> }
+
+export type CheckUserProfileMutationVariables = Exact<{ [key: string]: never }>
+
+export type CheckUserProfileMutation = { __typename?: 'Mutation'; checked?: any | null }
+
+export type SyncUserProfileMutationVariables = Exact<{ [key: string]: never }>
+
+export type SyncUserProfileMutation = { __typename?: 'Mutation'; synced?: any | null }
+
 export type GetUserProfileQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetUserProfileQuery = { __typename?: 'Query'; item: any }
+
+export type GetUserProfileByUsernameQueryVariables = Exact<{
+  username: Scalars['String']['input']
+}>
+
+export type GetUserProfileByUsernameQuery = { __typename?: 'Query'; item: any }
 
 export type GetUserProfilesQueryVariables = Exact<{ [key: string]: never }>
 
@@ -885,6 +936,19 @@ export type UserFindOneUserQuery = {
     status?: UserStatus | null
     updatedAt?: Date | null
     username?: string | null
+    identities?: Array<{
+      __typename?: 'Identity'
+      createdAt: Date
+      expired?: boolean | null
+      id: string
+      name?: string | null
+      profile?: any | null
+      provider: IdentityProvider
+      providerId: string
+      updatedAt: Date
+      url?: string | null
+      verified?: boolean | null
+    }> | null
   } | null
 }
 
@@ -1103,9 +1167,34 @@ export const CreateUserProfileDocument = gql`
     created: createUserProfile(publicKey: $publicKey)
   }
 `
+export const ProfileIdentityAddDocument = gql`
+  mutation profileIdentityAdd($publicKey: String!, $provider: IdentityProvider!, $providerId: String!) {
+    tx: profileIdentityAdd(publicKey: $publicKey, provider: $provider, providerId: $providerId)
+  }
+`
+export const ProfileIdentityRemoveDocument = gql`
+  mutation profileIdentityRemove($publicKey: String!, $provider: IdentityProvider!, $providerId: String!) {
+    tx: profileIdentityRemove(publicKey: $publicKey, provider: $provider, providerId: $providerId)
+  }
+`
+export const CheckUserProfileDocument = gql`
+  mutation checkUserProfile {
+    checked: checkUserProfile
+  }
+`
+export const SyncUserProfileDocument = gql`
+  mutation syncUserProfile {
+    synced: syncUserProfile
+  }
+`
 export const GetUserProfileDocument = gql`
   query getUserProfile {
     item: getUserProfile
+  }
+`
+export const GetUserProfileByUsernameDocument = gql`
+  query getUserProfileByUsername($username: String!) {
+    item: getUserProfileByUsername(username: $username)
   }
 `
 export const GetUserProfilesDocument = gql`
@@ -1183,9 +1272,13 @@ export const UserFindOneUserDocument = gql`
   query userFindOneUser($username: String!) {
     item: userFindOneUser(username: $username) {
       ...UserDetails
+      identities {
+        ...IdentityDetails
+      }
     }
   }
   ${UserDetailsFragmentDoc}
+  ${IdentityDetailsFragmentDoc}
 `
 export const UserUpdateUserDocument = gql`
   mutation userUpdateUser($input: UserUserUpdateInput!) {
@@ -1221,7 +1314,12 @@ const UserLinkIdentityDocumentString = print(UserLinkIdentityDocument)
 const AnonRequestIdentityChallengeDocumentString = print(AnonRequestIdentityChallengeDocument)
 const AnonVerifyIdentityChallengeDocumentString = print(AnonVerifyIdentityChallengeDocument)
 const CreateUserProfileDocumentString = print(CreateUserProfileDocument)
+const ProfileIdentityAddDocumentString = print(ProfileIdentityAddDocument)
+const ProfileIdentityRemoveDocumentString = print(ProfileIdentityRemoveDocument)
+const CheckUserProfileDocumentString = print(CheckUserProfileDocument)
+const SyncUserProfileDocumentString = print(SyncUserProfileDocument)
 const GetUserProfileDocumentString = print(GetUserProfileDocument)
+const GetUserProfileByUsernameDocumentString = print(GetUserProfileByUsernameDocument)
 const GetUserProfilesDocumentString = print(GetUserProfilesDocument)
 const SolanaSignAndConfirmTransactionDocumentString = print(SolanaSignAndConfirmTransactionDocument)
 const AdminCreateUserDocumentString = print(AdminCreateUserDocument)
@@ -1558,6 +1656,90 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         variables,
       )
     },
+    profileIdentityAdd(
+      variables: ProfileIdentityAddMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: ProfileIdentityAddMutation
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ProfileIdentityAddMutation>(ProfileIdentityAddDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'profileIdentityAdd',
+        'mutation',
+        variables,
+      )
+    },
+    profileIdentityRemove(
+      variables: ProfileIdentityRemoveMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: ProfileIdentityRemoveMutation
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ProfileIdentityRemoveMutation>(ProfileIdentityRemoveDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'profileIdentityRemove',
+        'mutation',
+        variables,
+      )
+    },
+    checkUserProfile(
+      variables?: CheckUserProfileMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: CheckUserProfileMutation
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CheckUserProfileMutation>(CheckUserProfileDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'checkUserProfile',
+        'mutation',
+        variables,
+      )
+    },
+    syncUserProfile(
+      variables?: SyncUserProfileMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: SyncUserProfileMutation
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<SyncUserProfileMutation>(SyncUserProfileDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'syncUserProfile',
+        'mutation',
+        variables,
+      )
+    },
     getUserProfile(
       variables?: GetUserProfileQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
@@ -1575,6 +1757,27 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'getUserProfile',
+        'query',
+        variables,
+      )
+    },
+    getUserProfileByUsername(
+      variables: GetUserProfileByUsernameQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: GetUserProfileByUsernameQuery
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<GetUserProfileByUsernameQuery>(GetUserProfileByUsernameDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'getUserProfileByUsername',
         'query',
         variables,
       )

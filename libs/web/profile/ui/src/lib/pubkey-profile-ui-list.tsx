@@ -5,9 +5,9 @@ import { PubkeyProfileUiCard } from './pubkey-profile-ui-card'
 
 export function PubkeyProfileUiList({ profiles }: { profiles: PubKeyProfile[] }) {
   return (
-    <SimpleGrid cols={{ base: 1, md: 2 }}>
+    <SimpleGrid cols={{ base: 1, lg: 2 }}>
       {profiles?.map((account) => (
-        <PubkeyProfileUiCard key={account.publicKey?.toString()} profile={account} />
+        <PubkeyProfileUiCard key={account.publicKey?.toString()} profile={account} withLink />
       ))}
     </SimpleGrid>
   )

@@ -4,7 +4,7 @@ import { useAuth } from '@pubkey-network/web-auth-data-access'
 import { UiGrid } from '@pubkey-network/web-core-ui'
 import { useUserFindManyIdentity } from '@pubkey-network/web-identity-data-access'
 import { IdentityUiAvatar, IdentityUiBadge, IdentityUiLink } from '@pubkey-network/web-identity-ui'
-import { useUserFineOneUser } from '@pubkey-network/web-user-data-access'
+import { useUserFindOneUser } from '@pubkey-network/web-user-data-access'
 import { UserUiProfile } from '@pubkey-network/web-user-ui'
 import { UiCard, UiContainer, UiDebugModal, UiGroup, UiLoader, UiStack, UiWarning } from '@pubkey-ui/core'
 import { IconMoodSmile } from '@tabler/icons-react'
@@ -13,7 +13,7 @@ import { Link, useParams } from 'react-router-dom'
 export default function UserUserDetailFeature() {
   const { user: authUser } = useAuth()
   const { username } = useParams<{ username: string }>() as { username: string }
-  const { user, query } = useUserFineOneUser({ username })
+  const { user, query } = useUserFindOneUser({ username })
   const { items } = useUserFindManyIdentity({ username })
 
   if (query.isLoading) {

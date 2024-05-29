@@ -1,12 +1,26 @@
-import { Group, Stack, Text } from '@mantine/core'
+import { Anchor, Group, Stack, Text } from '@mantine/core'
+import { IdentityProvider, User } from '@pubkey-network/sdk'
 import { PubKeyProfile } from '@pubkey-program-library/anchor'
 import { UiCard, UiDebugModal, UiGroup, UiStack } from '@pubkey-ui/core'
+import { Link } from 'react-router-dom'
 import { PubkeyProfileUiAvatar } from './pubkey-profile-ui-avatar'
 
 import { PubkeyProfileUiCardAuthorities } from './pubkey-profile-ui-card-authorities'
 import { PubkeyProfileUiCardIdentities } from './pubkey-profile-ui-card-identities'
 
-export function PubkeyProfileUiCard({ profile }: { profile: PubKeyProfile }) {
+export function PubkeyProfileUiCard({
+  profile,
+  user,
+  withLink,
+  identityAdd,
+  identityRemove,
+}: {
+  profile: PubKeyProfile
+  user?: User | undefined
+  withLink?: boolean
+  identityAdd?: (input: { provider: IdentityProvider; providerId: string }) => Promise<void>
+  identityRemove?: (input: { provider: IdentityProvider; providerId: string }) => Promise<void>
+}) {
   return (
     <UiCard
       title={
@@ -14,9 +28,15 @@ export function PubkeyProfileUiCard({ profile }: { profile: PubKeyProfile }) {
           <Group align="center" wrap="nowrap" gap="xs">
             <PubkeyProfileUiAvatar profile={profile} />
             <Stack gap={0}>
-              <Text size="xl" fw="bold">
-                {profile.username}
-              </Text>
+              {withLink ? (
+                <Anchor component={Link} to={`/profile/${profile.username}`} size="xl" fw="bold">
+                  {profile.username}
+                </Anchor>
+              ) : (
+                <Text size="xl" fw="bold">
+                  {profile.username}
+                </Text>
+              )}
             </Stack>
           </Group>
           <Group gap="xs">
@@ -26,7 +46,12 @@ export function PubkeyProfileUiCard({ profile }: { profile: PubKeyProfile }) {
       }
     >
       <UiStack mt="md">
-        <PubkeyProfileUiCardIdentities profile={profile} />
+        <PubkeyProfileUiCardIdentities
+          profile={profile}
+          user={user}
+          identityAdd={identityAdd}
+          identityRemove={identityRemove}
+        />
         <PubkeyProfileUiCardAuthorities profile={profile} />
       </UiStack>
     </UiCard>

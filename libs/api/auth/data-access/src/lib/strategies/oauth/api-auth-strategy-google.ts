@@ -28,9 +28,10 @@ export class ApiAuthStrategyGoogle extends PassportStrategy(Strategy, 'google') 
 }
 
 function createGoogleProfile(profile: Profile) {
+  console.log('profile', profile)
   return {
     externalId: profile.id,
-    username: profile.username,
+    username: (profile.emails as Array<{ value?: string }>)[0].value,
     avatarUrl: profile.photos?.[0].value,
     name: profile.displayName,
   }

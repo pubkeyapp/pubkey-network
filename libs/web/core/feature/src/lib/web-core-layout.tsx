@@ -22,8 +22,8 @@ export function WebCoreLayout({ children }: { children: ReactNode }) {
           opened={opened}
           toggle={toggle}
           links={[
-            { link: '/dashboard', label: 'Dashboard' },
-            { link: '/solana', label: 'Solana' },
+            { link: '/profile', label: 'Profiles' },
+            { link: '/directory', label: 'Directory' },
           ]}
           profile={
             <Group gap="xs">

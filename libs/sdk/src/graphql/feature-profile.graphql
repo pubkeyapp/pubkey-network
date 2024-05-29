@@ -2,8 +2,28 @@ mutation createUserProfile($publicKey: String!) {
   created: createUserProfile(publicKey: $publicKey)
 }
 
+mutation profileIdentityAdd($publicKey: String!, $provider: IdentityProvider!, $providerId: String!) {
+  tx: profileIdentityAdd(publicKey: $publicKey, provider: $provider, providerId: $providerId)
+}
+
+mutation profileIdentityRemove($publicKey: String!, $provider: IdentityProvider!, $providerId: String!) {
+  tx: profileIdentityRemove(publicKey: $publicKey, provider: $provider, providerId: $providerId)
+}
+
+mutation checkUserProfile {
+  checked: checkUserProfile
+}
+
+mutation syncUserProfile {
+  synced: syncUserProfile
+}
+
 query getUserProfile {
   item: getUserProfile
+}
+
+query getUserProfileByUsername($username: String!) {
+  item: getUserProfileByUsername(username: $username)
 }
 
 query getUserProfiles {

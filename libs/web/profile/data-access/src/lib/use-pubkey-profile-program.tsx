@@ -1,11 +1,11 @@
 import { useSdk } from '@pubkey-network/web-core-data-access'
 import { uiToastLink } from '@pubkey-network/web-solana-data-access'
+import { CreateProfileOptions } from '@pubkey-program-library/sdk'
 import { toastError } from '@pubkey-ui/core'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 import { usePubkeyProfileSdk } from './use-pubkey-profile-sdk'
-import { CreateProfileOptions } from './web-pubkey-profile-sdk'
 
 export function usePubkeyProfileProgram() {
   const { signTransaction } = useWallet()
