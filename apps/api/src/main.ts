@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { ApiCoreService, CORE_APP_STARTED } from '@pubkey-network/api-core-data-access'
+import { PrismaSessionStore } from '@quixo3/prisma-session-store'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import { exec } from 'node:child_process'
@@ -17,6 +18,11 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: { secure: !core.config.isDevelopment },
+      store: new PrismaSessionStore(core.data, {
+        checkPeriod: 2 * 60 * 1000, //ms
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined,
+      }),
     }),
   )
   const host = `http://${core.config.host}:${core.config.port}`

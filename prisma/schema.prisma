@@ -39,6 +39,13 @@ model IdentityChallenge {
   providerId String
 }
 
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
 model User {
   id         String     @id @default(cuid())
   createdAt  DateTime   @default(now())
