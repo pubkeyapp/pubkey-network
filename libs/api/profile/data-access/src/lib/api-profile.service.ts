@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { Identity, IdentityProvider } from '@prisma/client'
 import { ApiCoreService } from '@pubkey-network/api-core-data-access'
 import { ApiSolanaService } from '@pubkey-network/api-solana-data-access'
@@ -43,6 +43,10 @@ export class ApiProfileService {
     })
 
     return transaction.serialize()
+  }
+
+  getApiUrl(path: string) {
+    return `${this.core.config.apiUrl}${path}`
   }
 
   async profileIdentityAdd(userId: string, publicKey: string, identityProvider: IdentityProvider, providerId: string) {
@@ -170,6 +174,10 @@ export class ApiProfileService {
     }
   }
 
+  getProviders() {
+    return this.validProviders
+  }
+
   async getUserProfile(userId: string): Promise<PubKeyProfile | null> {
     const user = await this.core.getUserById(userId)
 
@@ -181,19 +189,36 @@ export class ApiProfileService {
   }
 
   async getUserProfileByUsername(username: string): Promise<PubKeyProfile | null> {
-    return this.sdk.getProfileByUsernameNullable({ username })
+    this.ensureValidUsername(username)
+
+    try {
+      return await this.sdk.getProfileByUsernameNullable({ username })
+    } catch (e) {
+      throw new NotFoundException(`User profile not found for username ${username}`)
+    }
   }
 
   async getUserProfileByProvider(provider: PubKeyIdentityProvider, providerId: string): Promise<PubKeyProfile | null> {
     try {
-      return this.sdk.getProfileByProvider({ provider, providerId })
+      this.ensureValidProvider(provider)
     } catch (e) {
-      return null
+      throw new NotFoundException(`Invalid provider, must be one of ${this.validProviders.join(', ')}`)
+    }
+
+    try {
+      this.ensureValidProviderId(provider, providerId)
+    } catch (e) {
+      throw new NotFoundException(`Invalid provider ID for provider ${provider}`)
+    }
+    try {
+      return await this.sdk.getProfileByProviderNullable({ provider, providerId })
+    } catch (e) {
+      throw new NotFoundException(`User profile not found for provider ${provider} and providerId ${providerId}`)
     }
   }
 
-  getUserProfiles(): Promise<PubKeyProfile[]> {
-    return this.sdk.getProfiles()
+  async getUserProfiles(): Promise<PubKeyProfile[]> {
+    return this.sdk.getProfiles().then((res) => res.sort((a, b) => a.username.localeCompare(b.username)))
   }
 
   private async ensureUserProfile(userId: string) {
@@ -202,7 +227,7 @@ export class ApiProfileService {
       throw new Error('User not found')
     }
 
-    const profile = await this.getUserProfileByUsername(user.username)
+    const profile = await this.sdk.getProfileByUsernameNullable({ username: user.username })
     if (!profile) {
       throw new Error('User profile not found')
     }
@@ -215,8 +240,41 @@ export class ApiProfileService {
       throw new Error(`Invalid provider: ${provider}`)
     }
   }
+
+  private ensureValidProviderId(provider: PubKeyIdentityProvider, providerId: string) {
+    if (provider === PubKeyIdentityProvider.Solana && !isSolanaPublicKey(providerId)) {
+      throw new Error(`Invalid provider ID for ${provider}.`)
+    }
+    if (provider !== PubKeyIdentityProvider.Solana && !isNumericString(providerId)) {
+      throw new Error(`Invalid provider ID for ${provider}.`)
+    }
+  }
+
+  private ensureValidUsername(username: string) {
+    if (!isValidUsername(username)) {
+      throw new NotFoundException(`Invalid username: ${username}`)
+    }
+  }
 }
 
+function isNumericString(str: string): boolean {
+  return /^\d+$/.test(str)
+}
+
+function isSolanaPublicKey(str: string): boolean {
+  return !!parseSolanaPublicKey(str)
+}
+function isValidUsername(username: string): boolean {
+  if (username.length < 3 || username.length > 20) {
+    return false
+  }
+
+  if (!username.split('').every((c) => /^[a-z0-9_]$/.test(c))) {
+    return false
+  }
+
+  return true
+}
 function parseSolanaPublicKey(publicKey: string): PublicKey | null {
   try {
     return new PublicKey(publicKey)
