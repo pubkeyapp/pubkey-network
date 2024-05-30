@@ -12,6 +12,7 @@ export function IdentityUiLoginButton({
     case IdentityProvider.Discord:
     case IdentityProvider.GitHub:
     case IdentityProvider.Google:
+    case IdentityProvider.Telegram:
     case IdentityProvider.Twitter:
       return <IdentityUiProviderButton action="login" provider={provider} fullWidth {...props} />
     case IdentityProvider.Solana:

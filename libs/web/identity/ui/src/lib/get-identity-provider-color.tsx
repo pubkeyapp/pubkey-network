@@ -10,6 +10,8 @@ export function getIdentityProviderColor(provider: IdentityProvider) {
       return '#DB4437'
     case IdentityProvider.Solana:
       return '#9945FF'
+    case IdentityProvider.Telegram:
+      return '#0088cc'
     case IdentityProvider.Twitter:
       return '#1DA1F2'
     default:

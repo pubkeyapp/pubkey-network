@@ -65,6 +65,7 @@ enum IdentityProvider {
   GitHub
   Google
   Solana
+  Telegram
   Twitter
 }
 

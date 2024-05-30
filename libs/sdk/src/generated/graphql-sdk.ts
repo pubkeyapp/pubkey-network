@@ -32,6 +32,7 @@ export type AppConfig = {
   authPasswordEnabled: Scalars['Boolean']['output']
   authRegisterEnabled: Scalars['Boolean']['output']
   authSolanaEnabled: Scalars['Boolean']['output']
+  authTelegramEnabled: Scalars['Boolean']['output']
   authTwitterEnabled: Scalars['Boolean']['output']
   solanaFeePayer: Scalars['String']['output']
 }
@@ -82,6 +83,7 @@ export enum IdentityProvider {
   GitHub = 'GitHub',
   Google = 'Google',
   Solana = 'Solana',
+  Telegram = 'Telegram',
   Twitter = 'Twitter',
 }
 

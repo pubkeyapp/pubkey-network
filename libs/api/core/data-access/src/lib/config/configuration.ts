@@ -37,6 +37,10 @@ export interface ApiCoreConfig {
   authGoogleClientId: string
   authGoogleClientSecret: string
   authGoogleEnabled: boolean
+  // Telegram Authentication
+  authTelegramAdminIds: string[]
+  authTelegramBotToken: string
+  authTelegramEnabled: boolean
   // Twitter Authentication
   authTwitterAdminIds: string[]
   authTwitterConsumerKey: string
@@ -80,6 +84,9 @@ export function configuration(): ApiCoreConfig {
     authGoogleClientId: process.env['AUTH_GOOGLE_CLIENT_ID'] as string,
     authGoogleClientSecret: process.env['AUTH_GOOGLE_CLIENT_SECRET'] as string,
     authGoogleEnabled: process.env['AUTH_GOOGLE_ENABLED'] === 'true',
+    authTelegramAdminIds: getFromEnvironment('AUTH_TELEGRAM_ADMIN_IDS'),
+    authTelegramBotToken: process.env['AUTH_TELEGRAM_BOT_TOKEN'] as string,
+    authTelegramEnabled: process.env['AUTH_TELEGRAM_ENABLED'] === 'true',
     authTwitterAdminIds: getFromEnvironment('AUTH_TWITTER_ADMIN_IDS'),
     authTwitterConsumerKey: process.env['AUTH_TWITTER_CONSUMER_KEY'] as string,
     authTwitterConsumerSecret: process.env['AUTH_TWITTER_CONSUMER_SECRET'] as string,

@@ -18,6 +18,10 @@ export const validationSchema = Joi.object({
   AUTH_GOOGLE_CLIENT_ID: Joi.string(),
   AUTH_GOOGLE_CLIENT_SECRET: Joi.string(),
   AUTH_GOOGLE_ENABLED: Joi.boolean().default(true),
+  // Telegram Authentication
+  AUTH_TELEGRAM_ADMIN_IDS: Joi.string(),
+  AUTH_TELEGRAM_BOT_TOKEN: Joi.string(),
+  AUTH_TELEGRAM_ENABLED: Joi.boolean().default(true),
   // Twitter Authentication
   AUTH_TWITTER_ADMIN_IDS: Joi.string(),
   AUTH_TWITTER_CONSUMER_KEY: Joi.string(),

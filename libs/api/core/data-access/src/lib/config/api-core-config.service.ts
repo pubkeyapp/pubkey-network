@@ -23,6 +23,7 @@ export class ApiCoreConfigService {
       authPasswordEnabled: this.authPasswordEnabled,
       authRegisterEnabled: this.authRegisterEnabled,
       authSolanaEnabled: this.authSolanaEnabled,
+      authTelegramEnabled: this.authTelegramEnabled,
       authTwitterEnabled: this.authTwitterEnabled,
       solanaFeePayer: this.solanaFeePayer.publicKey.toString(),
     }
@@ -128,6 +129,18 @@ export class ApiCoreConfigService {
       !this.authGoogleClientSecret ||
       !this.service.get<boolean>('authGoogleEnabled')
     )
+  }
+
+  get authTelegramAdminIds() {
+    return this.service.get<string[]>('authTelegramAdminIds')
+  }
+
+  get authTelegramBotToken() {
+    return this.service.get<string>('authTelegramBotToken')
+  }
+
+  get authTelegramEnabled(): boolean {
+    return !(!this.authTelegramBotToken || !this.service.get<boolean>('authTelegramEnabled'))
   }
 
   get authTwitterAdminIds() {

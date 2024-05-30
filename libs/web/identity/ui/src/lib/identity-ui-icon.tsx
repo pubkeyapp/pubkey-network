@@ -3,6 +3,7 @@ import {
   IconBrandDiscord,
   IconBrandGithub,
   IconBrandGoogle,
+  IconBrandTelegram,
   IconBrandTwitter,
   IconCurrencySolana,
   IconQuestionMark,
@@ -18,6 +19,8 @@ export function IdentityUiIcon({ provider, size }: { provider: IdentityProvider;
       return <IconBrandGoogle size={size} />
     case IdentityProvider.Solana:
       return <IconCurrencySolana size={size} />
+    case IdentityProvider.Telegram:
+      return <IconBrandTelegram size={size} />
     case IdentityProvider.Twitter:
       return <IconBrandTwitter size={size} />
     default:

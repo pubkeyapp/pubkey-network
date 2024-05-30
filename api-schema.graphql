@@ -9,6 +9,7 @@ type AppConfig {
   authPasswordEnabled: Boolean!
   authRegisterEnabled: Boolean!
   authSolanaEnabled: Boolean!
+  authTelegramEnabled: Boolean!
   authTwitterEnabled: Boolean!
   solanaFeePayer: String!
 }
@@ -62,6 +63,7 @@ enum IdentityProvider {
   GitHub
   Google
   Solana
+  Telegram
   Twitter
 }
 

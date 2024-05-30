@@ -29,6 +29,7 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
       authPasswordEnabled,
       authRegisterEnabled,
       authSolanaEnabled,
+      authTelegramEnabled,
       authTwitterEnabled,
     } = appConfig as AppConfig
     return (
@@ -38,6 +39,7 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
       authRegisterEnabled ||
       authPasswordEnabled ||
       authSolanaEnabled ||
+      authTelegramEnabled ||
       authTwitterEnabled
     )
   }, [appConfig])
@@ -50,6 +52,7 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
             appConfig.authGithubEnabled && IdentityProvider.GitHub,
             appConfig.authGoogleEnabled && IdentityProvider.Google,
             appConfig.authSolanaEnabled && IdentityProvider.Solana,
+            appConfig.authTelegramEnabled && IdentityProvider.Telegram,
             appConfig.authTwitterEnabled && IdentityProvider.Twitter,
           ].filter(Boolean) as IdentityProvider[])
         : [],
