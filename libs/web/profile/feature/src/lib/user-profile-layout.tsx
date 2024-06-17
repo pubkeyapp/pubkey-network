@@ -34,7 +34,5 @@ export function UserProfileLayout({ children }: { children: ReactNode }) {
 }
 
 export function UserProfileCheckFeature() {
-  const checkUserProfile = useCheckUserProfile()
-
   return <UiCard title={'Check Profile'}>CONTENT</UiCard>
 }
