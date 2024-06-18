@@ -1,24 +1,24 @@
-import { useAnchorProvider, useCluster } from '@pubkey-network/web-solana-data-access'
-import { getPubkeyProfileProgramId } from '@pubkey-program-library/anchor'
+import { useAppConfig } from '@pubkey-network/web-core-data-access'
+import { useAnchorProvider } from '@pubkey-network/web-solana-data-access'
+import { PUBKEY_PROFILE_PROGRAM_ID } from '@pubkey-program-library/anchor'
 import { PubKeyProfileSdk } from '@pubkey-program-library/sdk'
 import { useConnection } from '@solana/wallet-adapter-react'
-import { Cluster } from '@solana/web3.js'
 import { useMemo } from 'react'
 
 export function usePubkeyProfileSdk() {
   const { connection } = useConnection()
-  const { cluster, getExplorerUrl } = useCluster()
+  const { solanaEndpoint, getExplorerUrl } = useAppConfig()
   const provider = useAnchorProvider()
 
   const sdk = useMemo(() => {
-    const programId = getPubkeyProfileProgramId(cluster.network as Cluster)
+    const programId = PUBKEY_PROFILE_PROGRAM_ID
 
     return new PubKeyProfileSdk({ connection, programId, provider })
-  }, [connection, cluster, provider])
+  }, [connection, provider])
 
   return {
     connection,
-    cluster,
+    solanaEndpoint,
     getExplorerUrl,
     sdk,
   }

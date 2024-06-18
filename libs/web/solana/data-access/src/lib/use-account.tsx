@@ -1,9 +1,9 @@
+import { useAppConfig } from '@pubkey-network/web-core-data-access'
 import { toastError } from '@pubkey-ui/core'
 import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { Connection, LAMPORTS_PER_SOL, PublicKey, TransactionSignature } from '@solana/web3.js'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCluster } from './cluster-provider'
 import { createTransaction } from './create-transaction'
 import { uiToastLink } from './ui-toast-link'
 
@@ -123,7 +123,7 @@ async function requestAndConfirmAirdrop({
 }
 
 function useOnTransactionSuccess({ address }: { address: PublicKey }) {
-  const { getExplorerUrl } = useCluster()
+  const { getExplorerUrl } = useAppConfig()
   const client = useQueryClient()
   const { getBalance, getSignatures } = useQueries({ address })
 

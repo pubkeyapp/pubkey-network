@@ -14,7 +14,9 @@ export interface AuthProviderContext {
   appConfig?: AppConfig | undefined
   authEnabled: boolean
   enabledProviders: IdentityProvider[]
-  feePayer: PublicKey
+  getExplorerUrl: (path: string) => string
+  solanaEndpoint: string
+  solanaFeePayer: PublicKey
 }
 
 const Context = createContext<AuthProviderContext>({} as AuthProviderContext)
@@ -63,7 +65,10 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
     appConfig,
     authEnabled,
     enabledProviders,
-    feePayer: new PublicKey(appConfig.solanaFeePayer),
+    getExplorerUrl: (path: string) =>
+      `https://explorer.solana.com/${path}${getClusterUrlParam(appConfig.solanaEndpoint)}`,
+    solanaEndpoint: appConfig.solanaEndpoint,
+    solanaFeePayer: new PublicKey(appConfig.solanaFeePayer),
   }
 
   return <Context.Provider value={value}>{children}</Context.Provider>
@@ -71,4 +76,19 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
 
 export function useAppConfig() {
   return useContext(Context)
+}
+
+function getClusterUrlParam(endpoint: string): string {
+  let suffix = ''
+  if (endpoint.includes('devnet')) {
+    suffix = 'devnet'
+  } else if (endpoint.includes('testnet')) {
+    suffix = 'testnet'
+  } else if (endpoint.includes('localhost')) {
+    suffix = `custom&customUrl=${encodeURIComponent(endpoint)}`
+  } else {
+    suffix = ''
+  }
+
+  return suffix.length ? `?cluster=${suffix}` : ''
 }

@@ -11,6 +11,7 @@ type AppConfig {
   authSolanaEnabled: Boolean!
   authTelegramEnabled: Boolean!
   authTwitterEnabled: Boolean!
+  solanaEndpoint: String!
   solanaFeePayer: String!
 }
 

@@ -2,10 +2,10 @@ import { UseGuards } from '@nestjs/common'
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ApiAuthGraphQLAdminGuard } from '@pubkey-network/api-auth-data-access'
 import {
-  IdentityAdminCreateInput,
-  IdentityAdminFindManyInput,
   ApiIdentityService,
   Identity,
+  IdentityAdminCreateInput,
+  IdentityAdminFindManyInput,
 } from '@pubkey-network/api-identity-data-access'
 
 @Resolver()
@@ -17,10 +17,12 @@ export class ApiIdentityAdminResolver {
   adminCreateIdentity(@Args('input') input: IdentityAdminCreateInput) {
     return this.service.admin.createIdentity(input)
   }
+
   @Mutation(() => Boolean, { nullable: true })
   adminDeleteIdentity(@Args('identityId') identityId: string) {
     return this.service.admin.deleteIdentity(identityId)
   }
+
   @Query(() => [Identity], { nullable: true })
   adminFindManyIdentity(@Args('input') input: IdentityAdminFindManyInput) {
     return this.service.admin.findManyIdentity(input)

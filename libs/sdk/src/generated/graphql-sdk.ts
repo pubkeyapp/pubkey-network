@@ -34,6 +34,7 @@ export type AppConfig = {
   authSolanaEnabled: Scalars['Boolean']['output']
   authTelegramEnabled: Scalars['Boolean']['output']
   authTwitterEnabled: Scalars['Boolean']['output']
+  solanaEndpoint: Scalars['String']['output']
   solanaFeePayer: Scalars['String']['output']
 }
 
@@ -376,6 +377,7 @@ export type LoginMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    profile?: string | null
     profileUrl: string
     role?: UserRole | null
     status?: UserStatus | null
@@ -401,6 +403,7 @@ export type RegisterMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    profile?: string | null
     profileUrl: string
     role?: UserRole | null
     status?: UserStatus | null
@@ -420,6 +423,7 @@ export type MeQuery = {
     developer?: boolean | null
     id: string
     name?: string | null
+    profile?: string | null
     profileUrl: string
     role?: UserRole | null
     status?: UserStatus | null
@@ -437,6 +441,7 @@ export type AppConfigDetailsFragment = {
   authRegisterEnabled: boolean
   authSolanaEnabled: boolean
   authTwitterEnabled: boolean
+  solanaEndpoint: string
   solanaFeePayer: string
 }
 
@@ -468,6 +473,7 @@ export type AppConfigQuery = {
     authRegisterEnabled: boolean
     authSolanaEnabled: boolean
     authTwitterEnabled: boolean
+    solanaEndpoint: string
     solanaFeePayer: string
   }
 }
@@ -538,6 +544,7 @@ export type AdminFindManyIdentityQuery = {
       developer?: boolean | null
       id: string
       name?: string | null
+      profile?: string | null
       profileUrl: string
       role?: UserRole | null
       status?: UserStatus | null
@@ -763,6 +770,7 @@ export type UserDetailsFragment = {
   developer?: boolean | null
   id: string
   name?: string | null
+  profile?: string | null
   profileUrl: string
   role?: UserRole | null
   status?: UserStatus | null
@@ -783,6 +791,7 @@ export type AdminCreateUserMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    profile?: string | null
     profileUrl: string
     role?: UserRole | null
     status?: UserStatus | null
@@ -812,6 +821,7 @@ export type AdminFindManyUserQuery = {
       developer?: boolean | null
       id: string
       name?: string | null
+      profile?: string | null
       profileUrl: string
       role?: UserRole | null
       status?: UserStatus | null
@@ -857,6 +867,7 @@ export type AdminFindOneUserQuery = {
     developer?: boolean | null
     id: string
     name?: string | null
+    profile?: string | null
     profileUrl: string
     role?: UserRole | null
     status?: UserStatus | null
@@ -879,6 +890,7 @@ export type AdminUpdateUserMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    profile?: string | null
     profileUrl: string
     role?: UserRole | null
     status?: UserStatus | null
@@ -902,6 +914,7 @@ export type UserFindManyUserQuery = {
       developer?: boolean | null
       id: string
       name?: string | null
+      profile?: string | null
       profileUrl: string
       role?: UserRole | null
       status?: UserStatus | null
@@ -934,6 +947,7 @@ export type UserFindOneUserQuery = {
     developer?: boolean | null
     id: string
     name?: string | null
+    profile?: string | null
     profileUrl: string
     role?: UserRole | null
     status?: UserStatus | null
@@ -968,6 +982,7 @@ export type UserUpdateUserMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    profile?: string | null
     profileUrl: string
     role?: UserRole | null
     status?: UserStatus | null
@@ -985,6 +1000,7 @@ export const AppConfigDetailsFragmentDoc = gql`
     authRegisterEnabled
     authSolanaEnabled
     authTwitterEnabled
+    solanaEndpoint
     solanaFeePayer
   }
 `
@@ -1034,6 +1050,7 @@ export const UserDetailsFragmentDoc = gql`
     developer
     id
     name
+    profile
     profileUrl
     role
     status

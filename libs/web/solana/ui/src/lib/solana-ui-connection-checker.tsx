@@ -1,17 +1,17 @@
 import { Button, Group, Text } from '@mantine/core'
-import { useCluster } from '@pubkey-network/web-solana-data-access'
+import { useAppConfig } from '@pubkey-network/web-core-data-access'
 import { UiWarning } from '@pubkey-ui/core'
 import { useConnection } from '@solana/wallet-adapter-react'
 import { IconNetworkOff } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { ReactNode } from 'react'
 
-export function SolanaUiClusterChecker({ children }: { children: ReactNode }) {
-  const { cluster } = useCluster()
+export function SolanaUiConnectionChecker({ children }: { children: ReactNode }) {
+  const { solanaEndpoint } = useAppConfig()
   const { connection } = useConnection()
 
   const query = useQuery({
-    queryKey: ['version', { cluster, endpoint: connection.rpcEndpoint }],
+    queryKey: ['version', { solanaEndpoint, endpoint: connection.rpcEndpoint }],
     queryFn: () => connection.getVersion(),
     retry: 1,
   })
@@ -30,7 +30,7 @@ export function SolanaUiClusterChecker({ children }: { children: ReactNode }) {
         message={
           <Group justify="center">
             <Text>
-              Error connecting to cluster <strong>{cluster.name}</strong>
+              Error connecting to endpoint <strong>{solanaEndpoint}</strong>
             </Text>
             <Button variant="light" color="yellow" size="xs" onClick={() => query.refetch()}>
               Refresh

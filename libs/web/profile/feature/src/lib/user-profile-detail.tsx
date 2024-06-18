@@ -24,7 +24,7 @@ export function UserProfileDetail() {
   const mutationCreateProfile = useCreateUserProfile()
   const mutationProfileIdentityAdd = useProfileIdentityAdd()
   const mutationProfileIdentityRemove = useProfileIdentityRemove()
-  const { feePayer } = useAppConfig()
+  const { solanaFeePayer } = useAppConfig()
   const { user } = useAuth()
   const { publicKey } = useWallet()
   const { createProfile } = usePubkeyProfileProgram()
@@ -60,7 +60,7 @@ export function UserProfileDetail() {
       authority: publicKey as PublicKey,
       avatarUrl: user?.avatarUrl as string,
       username: user?.username as string,
-      feePayer,
+      feePayer: solanaFeePayer,
     })
   }
 

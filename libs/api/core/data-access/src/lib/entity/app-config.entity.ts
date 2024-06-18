@@ -19,5 +19,7 @@ export class AppConfig {
   @Field()
   authTwitterEnabled!: boolean
   @Field()
+  solanaEndpoint!: string
+  @Field()
   solanaFeePayer!: string
 }

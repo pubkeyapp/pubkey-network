@@ -1,5 +1,5 @@
 import { Anchor, AnchorProps, Group } from '@mantine/core'
-import { useCluster } from '@pubkey-network/web-solana-data-access'
+import { useAppConfig } from '@pubkey-network/web-core-data-access'
 import { UiCopy } from '@pubkey-ui/core'
 
 export function SolanaUiExplorerLink({
@@ -31,7 +31,7 @@ export function SolanaExplorerAnchor({
   label?: string
   path: string
 }) {
-  const { getExplorerUrl } = useCluster()
+  const { getExplorerUrl } = useAppConfig()
   return (
     <Anchor c="brand" href={getExplorerUrl(path)} target="_blank" rel="noopener noreferrer" {...props}>
       {label}

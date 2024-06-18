@@ -49,6 +49,7 @@ export const validationSchema = Joi.object({
   PORT: Joi.number().default(3000),
   SESSION_SECRET: Joi.string().required(),
   SOLANA_ENDPOINT: Joi.string().required().default(clusterApiUrl('devnet')),
+  SOLANA_ENDPOINT_PUBLIC: Joi.string().required().default(clusterApiUrl('devnet')),
   SOLANA_FEE_PAYER_SECRET_KEY: Joi.string().required(),
   SOLANA_FEE_PAYER_MINIMAL_BALANCE: Joi.number().default(1),
   SYNC_DRY_RUN: Joi.boolean().default(false),

@@ -1,12 +1,12 @@
 import { Group, Stack, Text } from '@mantine/core'
 import { AppIdentity } from '@pubkey-network/sdk'
-import { useCluster } from '@pubkey-network/web-solana-data-access'
+import { useAppConfig } from '@pubkey-network/web-core-data-access'
 import { UiAnchor } from '@pubkey-ui/core'
 import { ReactNode } from 'react'
 import { PubkeyProfileUiProvider } from './pubkey-profile-ui-provider'
 
 export function useGetIdentityUrl(identity: AppIdentity) {
-  const { getExplorerUrl } = useCluster()
+  const { getExplorerUrl } = useAppConfig()
 
   switch (identity.provider.toString().toLowerCase()) {
     case 'discord':

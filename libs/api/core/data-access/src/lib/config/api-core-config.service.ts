@@ -25,6 +25,7 @@ export class ApiCoreConfigService {
       authSolanaEnabled: this.authSolanaEnabled,
       authTelegramEnabled: this.authTelegramEnabled,
       authTwitterEnabled: this.authTwitterEnabled,
+      solanaEndpoint: this.solanaEndpointPublic,
       solanaFeePayer: this.solanaFeePayer.publicKey.toString(),
     }
   }
@@ -247,6 +248,10 @@ export class ApiCoreConfigService {
 
   get solanaEndpoint() {
     return this.service.get<string>('solanaEndpoint') as string
+  }
+
+  get solanaEndpointPublic() {
+    return this.service.get<string>('solanaEndpointPublic') as string
   }
 
   get solanaFeePayer(): Keypair {

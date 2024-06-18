@@ -5,8 +5,7 @@ import { UiHeaderProfile } from '@pubkey-network/web-core-ui'
 import {
   SolanaUiAccountBalanceButton,
   SolanaUiAccountChecker,
-  SolanaUiClusterChecker,
-  SolanaUiClusterSelect,
+  SolanaUiConnectionChecker,
   WalletIcon,
 } from '@pubkey-network/web-solana-ui'
 import { UiHeader, UiLayout, UiLoader } from '@pubkey-ui/core'
@@ -28,7 +27,6 @@ export function WebCoreLayout({ children }: { children: ReactNode }) {
           profile={
             <Group gap="xs">
               <SolanaUiAccountBalanceButton />
-              <SolanaUiClusterSelect />
               <WalletIcon />
               <UiHeaderProfile user={user} logout={logout} />
             </Group>
@@ -36,9 +34,9 @@ export function WebCoreLayout({ children }: { children: ReactNode }) {
         />
       }
     >
-      <SolanaUiClusterChecker>
+      <SolanaUiConnectionChecker>
         <SolanaUiAccountChecker />
-      </SolanaUiClusterChecker>
+      </SolanaUiConnectionChecker>
       <Suspense fallback={<UiLoader mt="xl" size="xl" type="dots" />}>{children}</Suspense>
     </UiLayout>
   )

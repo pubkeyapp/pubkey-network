@@ -1,4 +1,5 @@
 import { AnchorProvider } from '@coral-xyz/anchor'
+import { useAppConfig } from '@pubkey-network/web-core-data-access'
 import { WalletModalProvider } from '@pubkeyapp/wallet-adapter-mantine-ui'
 import { WalletError } from '@solana/wallet-adapter-base'
 import {
@@ -8,20 +9,14 @@ import {
   useWallet,
   WalletProvider,
 } from '@solana/wallet-adapter-react'
-import { ReactNode, useCallback, useMemo } from 'react'
-import { ClusterProvider, useCluster } from './cluster-provider'
+import { ReactNode, useCallback } from 'react'
 
 export function SolanaClusterProvider({ autoConnect, children }: { autoConnect?: boolean; children: ReactNode }) {
-  return (
-    <ClusterProvider>
-      <SolanaProvider autoConnect={autoConnect}>{children}</SolanaProvider>
-    </ClusterProvider>
-  )
+  return <SolanaProvider autoConnect={autoConnect}>{children}</SolanaProvider>
 }
 
 export function SolanaProvider({ autoConnect = true, children }: { autoConnect?: boolean; children: ReactNode }) {
-  const { cluster } = useCluster()
-  const endpoint = useMemo(() => cluster.endpoint, [cluster])
+  const { solanaEndpoint: endpoint } = useAppConfig()
 
   const onError = useCallback((error: WalletError) => {
     console.error(error)

@@ -64,6 +64,7 @@ export interface ApiCoreConfig {
   port: number
   sessionSecret: string
   solanaEndpoint: string
+  solanaEndpointPublic: string
   solanaFeePayer: Keypair
   solanaFeePayerMinimalBalance: number
   webUrl: string
@@ -105,6 +106,7 @@ export function configuration(): ApiCoreConfig {
     jwtSecret: process.env['JWT_SECRET'] as string,
     port: parseInt(process.env['PORT'] as string, 10) || 3000,
     solanaEndpoint: process.env['SOLANA_ENDPOINT'] as string,
+    solanaEndpointPublic: process.env['SOLANA_ENDPOINT_PUBLIC'] as string,
     solanaFeePayer: Keypair.fromSecretKey(
       Uint8Array.from(JSON.parse(process.env['SOLANA_FEE_PAYER_SECRET_KEY'] as string)),
     ),

@@ -1,6 +1,7 @@
 import { Button, Menu } from '@mantine/core'
 import { ellipsify } from '@pubkey-network/sdk'
-import { useCluster, useGetBalance } from '@pubkey-network/web-solana-data-access'
+import { useAppConfig } from '@pubkey-network/web-core-data-access'
+import { useGetBalance } from '@pubkey-network/web-solana-data-access'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey } from '@solana/web3.js'
 import { IconCurrencySolana, IconExternalLink } from '@tabler/icons-react'
@@ -15,7 +16,7 @@ export function SolanaUiAccountBalanceButton() {
 
 function AccountBalanceButton({ address }: { address: PublicKey }) {
   const query = useGetBalance({ address })
-  const { getExplorerUrl } = useCluster()
+  const { getExplorerUrl } = useAppConfig()
   const content = query.data ? <SolanaUiBalanceSol balance={query.data} /> : '...'
 
   return (
