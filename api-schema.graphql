@@ -164,6 +164,7 @@ type User {
   id: String!
   identities: [Identity!]
   name: String
+  profile: String
   profileUrl: String!
   role: UserRole
   status: UserStatus

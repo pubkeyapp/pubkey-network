@@ -18,6 +18,8 @@ export class User {
   @Field({ nullable: true })
   avatarUrl?: string | null
   @Field({ nullable: true })
+  profile?: string | null
+  @Field({ nullable: true })
   developer!: boolean
   @Field({ nullable: true })
   name?: string | null

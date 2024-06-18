@@ -217,6 +217,13 @@ export class ApiProfileService {
     }
   }
 
+  async getUserProfileByProviderNullable(
+    provider: IdentityProvider,
+    providerId: string,
+  ): Promise<PubKeyProfile | null> {
+    return this.sdk.getProfileByProviderNullable({ provider: convertToPubKeyIdentityProvider(provider), providerId })
+  }
+
   async getUserProfiles(): Promise<PubKeyProfile[]> {
     return this.sdk.getProfiles().then((res) => res.sort((a, b) => a.username.localeCompare(b.username)))
   }

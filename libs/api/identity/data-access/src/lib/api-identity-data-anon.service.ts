@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { IdentityProvider, UserRole, UserStatus } from '@prisma/client'
+import { Identity, IdentityProvider, User, UserRole, UserStatus } from '@prisma/client'
 import { ApiAuthService } from '@pubkey-network/api-auth-data-access'
 import {
   ApiCoreService,
@@ -8,10 +8,13 @@ import {
   getRequestDetails,
   slugifyId,
 } from '@pubkey-network/api-core-data-access'
+import { PubKeyProfile } from '@pubkey-program-library/anchor'
 import { ApiIdentitySolanaService } from './api-identity-solana.service'
 import { IdentityRequestChallengeInput } from './dto/identity-request-challenge-input'
 import { IdentityVerifyChallengeInput } from './dto/identity-verify-challenge-input'
 import { sha256 } from './helpers/sha256'
+
+export type IdentityWithOwner = Identity & { owner?: User }
 
 @Injectable()
 export class ApiIdentityDataAnonService {
@@ -25,11 +28,12 @@ export class ApiIdentityDataAnonService {
   async requestIdentityChallenge(ctx: BaseContext, { provider, providerId }: IdentityRequestChallengeInput) {
     // Make sure we can link the given provider
     this.solana.ensureLinkProvider(provider)
+
     // Make sure the providerId is valid
     this.solana.ensureValidProviderId(provider, providerId)
 
     // Check if we already have an identity for this provider
-    const found = await this.solana.findIdentity(provider, providerId)
+    const { identity, profile, avatarUrl, username } = await this.getIdentityProfile(provider, providerId)
 
     // Get the IP and user agent from the request
     const { ip, userAgent } = getRequestDetails(ctx)
@@ -37,6 +41,7 @@ export class ApiIdentityDataAnonService {
     // Generate a random challenge
     const challenge = sha256(`${Math.random()}-${ip}-${userAgent}-${provider}-${providerId}-${Math.random()}`)
     const admin = this.core.config.isAdminId(IdentityProvider.Solana, providerId)
+
     // Store the challenge
     return this.core.data.identityChallenge.create({
       data: {
@@ -49,7 +54,10 @@ export class ApiIdentityDataAnonService {
               verified: false,
               owner: {
                 create: {
-                  username: slugifyId(`${ellipsify(providerId)}-${provider}`),
+                  username,
+                  name: username,
+                  avatarUrl,
+                  profile: profile?.publicKey?.toString(),
                   role: admin ? UserRole.Admin : UserRole.User,
                   status: UserStatus.Active,
                   developer: admin,
@@ -61,10 +69,55 @@ export class ApiIdentityDataAnonService {
         ip,
         userAgent,
         challenge: `Approve this message ${
-          found ? `sign in as ${found.owner.username}` : 'sign up for a new account'
+          identity?.owner ? `sign in as ${username}` : 'sign up for a new account'
         }. #REF-${challenge}`,
       },
     })
+  }
+
+  private async getIdentityProfile(
+    provider: IdentityProvider,
+    providerId: string,
+  ): Promise<{
+    identity: IdentityWithOwner | null
+    profile: PubKeyProfile | null
+    avatarUrl: string | undefined
+    username: string
+  }> {
+    const [identity, profile] = await Promise.all([
+      this.solana.findIdentity(provider, providerId),
+      this.solana.findPubKeyProfile(provider, providerId),
+    ])
+
+    let avatarUrl = undefined
+    let username = ''
+
+    if (identity?.owner && profile) {
+      if (profile.username !== identity?.owner?.username) {
+        throw new Error(`TODO: Fix: Profile and Identity Owner username do not match`)
+      }
+      avatarUrl = identity.owner.avatarUrl ?? undefined
+      username = identity.owner.username
+    }
+
+    // PubKey Profile is found, identity does not exist.
+    if (!identity && profile) {
+      avatarUrl = profile.avatarUrl ?? undefined
+      username = profile.username
+    }
+
+    // Nothing is found, total new user.
+    if (!identity && !profile) {
+      avatarUrl = undefined
+      username = slugifyId(`${ellipsify(providerId)}-${provider}`)
+    }
+
+    return {
+      identity,
+      profile,
+      avatarUrl,
+      username,
+    }
   }
 
   async verifyIdentityChallenge(
