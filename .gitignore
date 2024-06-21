@@ -44,4 +44,5 @@ libs/anchor/target/.rustc_info.json
 !libs/anchor/target/idl/*.json
 !libs/anchor/target/types/*.ts
 test-ledger
+nx-cloud.env
 .yarn
