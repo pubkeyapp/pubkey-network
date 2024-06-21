@@ -1,5 +1,5 @@
 import { Anchor, Group, Stack, Text } from '@mantine/core'
-import { IdentityProvider, User } from '@pubkey-network/sdk'
+import { IdentityProvider, PubkeyProfile as SdkPubKeyProfile, User } from '@pubkey-network/sdk'
 import { PubKeyProfile } from '@pubkey-program-library/anchor'
 import { UiCard, UiDebugModal, UiGroup, UiStack } from '@pubkey-ui/core'
 import { Link } from 'react-router-dom'
@@ -15,7 +15,7 @@ export function PubkeyProfileUiCard({
   identityAdd,
   identityRemove,
 }: {
-  profile: PubKeyProfile
+  profile: PubKeyProfile | SdkPubKeyProfile
   user?: User | undefined
   withLink?: boolean
   identityAdd?: (input: { provider: IdentityProvider; providerId: string }) => Promise<void>

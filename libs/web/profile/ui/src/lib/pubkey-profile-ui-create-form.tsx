@@ -3,15 +3,19 @@ import { useForm } from '@mantine/form'
 import { CreateProfileOptions } from '@pubkey-program-library/sdk'
 import { UiStack } from '@pubkey-ui/core'
 import { PublicKey } from '@solana/web3.js'
+import { ReactNode, useMemo } from 'react'
+import { ProfileUiPubKeyProfile } from './profile-ui-pub-key-profile'
 
 export function PubkeyProfileUiCreateForm({
   submit,
+  children,
   username,
   avatarUrl,
   authority,
   loading,
 }: {
   loading: boolean
+  children?: ReactNode
   authority: PublicKey
   submit: (input: Omit<CreateProfileOptions, 'feePayer'>) => Promise<void>
   username: string
@@ -25,16 +29,17 @@ export function PubkeyProfileUiCreateForm({
     },
   })
 
+  const profile = useMemo(
+    () => ({
+      avatarUrl: form.values.avatarUrl,
+      username: form.values.username,
+    }),
+    [form.values],
+  )
+
   return (
     <form onSubmit={form.onSubmit((values) => submit(values))}>
       <UiStack>
-        <TextInput
-          name="authority"
-          label="Authority"
-          description="The public key that has authority to update this profile. You can later add more authorities to this profile."
-          readOnly={true}
-          {...form.getInputProps('authority')}
-        />
         <TextInput
           name="username"
           label="Username"
@@ -50,10 +55,17 @@ export function PubkeyProfileUiCreateForm({
           type="url"
           {...form.getInputProps('avatarUrl')}
         />
-        <Group justify="right">
-          <Button loading={loading} type="submit">
-            Create Profile
-          </Button>
+        <Group justify="center" mt="md">
+          <ProfileUiPubKeyProfile avatarUrl={profile.avatarUrl} label={profile.username} />
+        </Group>
+        <Group justify="center">
+          {children ? (
+            children
+          ) : (
+            <Button loading={loading} type="submit">
+              Create Profile
+            </Button>
+          )}
         </Group>
       </UiStack>
     </form>

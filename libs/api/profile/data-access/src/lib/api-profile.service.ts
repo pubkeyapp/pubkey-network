@@ -130,8 +130,8 @@ export class ApiProfileService {
       providerId: i.providerId,
     }))
 
-    const diff = diffProfileIdentities(userIdentities, profileIdentities)
-    console.log('diff', diff)
+    const diffIdentities = diffProfileIdentities(userIdentities, profileIdentities)
+    console.log('diffIdentities', diffIdentities)
 
     try {
       const current = await this.getUserProfile(userId)
@@ -150,15 +150,26 @@ export class ApiProfileService {
   async syncUserProfile(userId: string) {
     const { user, profile } = await this.ensureUserProfile(userId)
 
+    console.log({ user, profile })
     const userIdentities = user.identities.map((i) => ({ provider: i.provider.toString(), providerId: i.providerId }))
 
-    const profileIdentities = profile.identities.map((i) => ({
-      provider: i.provider.toString(),
-      providerId: i.providerId,
-    }))
+    const diffProfile = diffProfileDetails(
+      { avatarUrl: 'a', username: user?.username },
+      { avatarUrl: 'a', username: profile?.username },
+    )
 
-    const diff = diffProfileIdentities(userIdentities, profileIdentities)
-    console.log('diff', diff)
+    if (Object.values(diffProfile).filter(Boolean).length) {
+      console.log('profile changes', diffProfile)
+    }
+
+    const diffIdentities = diffProfileIdentities(
+      userIdentities,
+      profile.identities.map((i) => ({
+        provider: i.provider.toString(),
+        providerId: i.providerId,
+      })),
+    )
+    console.log('diffIdentities', diffIdentities)
 
     try {
       const current = await this.getUserProfile(userId)
@@ -221,7 +232,14 @@ export class ApiProfileService {
     provider: IdentityProvider,
     providerId: string,
   ): Promise<PubKeyProfile | null> {
-    return this.sdk.getProfileByProviderNullable({ provider: convertToPubKeyIdentityProvider(provider), providerId })
+    try {
+      return await this.sdk.getProfileByProviderNullable({
+        provider: convertToPubKeyIdentityProvider(provider),
+        providerId,
+      })
+    } catch (e) {
+      return null
+    }
   }
 
   async getUserProfiles(): Promise<PubKeyProfile[]> {
@@ -234,12 +252,43 @@ export class ApiProfileService {
       throw new Error('User not found')
     }
 
-    const profile = await this.sdk.getProfileByUsernameNullable({ username: user.username })
+    const publicKeys: string[] = user.identities
+      .filter((i) => i.provider === IdentityProvider.Solana)
+      .map((i) => i.providerId)
+    const profile = await this.findProfile({ username: user.username, publicKeys })
     if (!profile) {
       throw new Error('User profile not found')
     }
 
     return { user, profile }
+  }
+
+  private async findProfile({ username, publicKeys }: { username: string; publicKeys: string[] }) {
+    const profile = await this.sdk.getProfileByUsernameNullable({ username })
+
+    if (profile) {
+      console.log(`No profile found`)
+      return profile
+    }
+
+    const profiles = await Promise.all(
+      publicKeys.map((providerId) => {
+        console.log(` -> Searching ${providerId}`)
+        return this.sdk.getProfileByProviderNullable({
+          provider: PubKeyIdentityProvider.Solana,
+          providerId,
+        })
+      }),
+    )
+
+    if (profiles?.length === 1) {
+      return profiles[0]
+    }
+
+    if (profiles.length > 1) {
+      throw new Error('TODO: handle case with multiple profiles')
+    }
+    throw new Error('User profile not found')
   }
 
   private ensureValidProvider(provider: PubKeyIdentityProvider) {
@@ -323,7 +372,17 @@ function diffProfileIdentities(
   )
 }
 
-function convertToPubKeyIdentityProvider(provider: IdentityProvider): PubKeyIdentityProvider {
+function diffProfileDetails(
+  left: { avatarUrl?: string; username?: string },
+  right: { avatarUrl?: string; username?: string },
+): { avatarUrl?: string; username?: string } {
+  return {
+    avatarUrl: left?.avatarUrl !== right?.avatarUrl ? right?.avatarUrl : undefined,
+    username: left?.username !== right?.username ? right?.username : undefined,
+  }
+}
+
+export function convertToPubKeyIdentityProvider(provider: IdentityProvider): PubKeyIdentityProvider {
   switch (provider.toString()) {
     case 'Discord':
       return PubKeyIdentityProvider.Discord

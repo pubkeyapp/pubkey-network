@@ -66,8 +66,8 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
     authEnabled,
     enabledProviders,
     getExplorerUrl: (path: string) =>
-      `https://explorer.solana.com/${path}${getClusterUrlParam(appConfig.solanaEndpoint)}`,
-    solanaEndpoint: appConfig.solanaEndpoint,
+      `https://explorer.solana.com/${path}${getClusterUrlParam(appConfig?.solanaEndpoint)}`,
+    solanaEndpoint: appConfig?.solanaEndpoint,
     solanaFeePayer: new PublicKey(appConfig.solanaFeePayer),
   }
 

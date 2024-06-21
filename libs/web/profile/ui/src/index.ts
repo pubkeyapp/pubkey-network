@@ -1,3 +1,5 @@
+export * from './lib/profile-ui-pub-key-loader'
+export * from './lib/profile-ui-pub-key-profile'
 export * from './lib/pubkey-profile-ui-avatar'
 export * from './lib/pubkey-profile-ui-card'
 export * from './lib/pubkey-profile-ui-card-authorities'

@@ -1,3 +1,21 @@
+fragment PubkeyProfileDetails on PubkeyProfile {
+  publicKey
+  bump
+  username
+  avatarUrl
+  feePayer
+  authorities
+  identities {
+    ...PubkeyProfileIdentityDetails
+  }
+}
+
+fragment PubkeyProfileIdentityDetails on PubkeyProfileIdentity {
+  provider
+  providerId
+  name
+}
+
 mutation createUserProfile($publicKey: String!) {
   created: createUserProfile(publicKey: $publicKey)
 }
@@ -19,11 +37,21 @@ mutation syncUserProfile {
 }
 
 query getUserProfile {
-  item: getUserProfile
+  item: getUserProfile {
+    ...PubkeyProfileDetails
+  }
 }
 
 query getUserProfileByUsername($username: String!) {
-  item: getUserProfileByUsername(username: $username)
+  item: getUserProfileByUsername(username: $username) {
+    ...PubkeyProfileDetails
+  }
+}
+
+query getUserProfileByProvider($provider: IdentityProvider!, $providerId: String!) {
+  item: getUserProfileByProvider(provider: $provider, providerId: $providerId) {
+    ...PubkeyProfileDetails
+  }
 }
 
 query getUserProfiles {

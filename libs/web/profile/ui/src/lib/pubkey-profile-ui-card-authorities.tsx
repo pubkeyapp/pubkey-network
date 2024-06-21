@@ -1,9 +1,9 @@
 import { Divider, Paper, Text } from '@mantine/core'
-import { ellipsify } from '@pubkey-network/sdk'
+import { ellipsify, PubkeyProfile as SdkPubKeyProfile } from '@pubkey-network/sdk'
 import { PubKeyProfile } from '@pubkey-program-library/anchor'
 import { UiGroup, UiStack } from '@pubkey-ui/core'
 
-export function PubkeyProfileUiCardAuthorities({ profile }: { profile: PubKeyProfile }) {
+export function PubkeyProfileUiCardAuthorities({ profile }: { profile: PubKeyProfile | SdkPubKeyProfile }) {
   return (
     <Paper withBorder py="sm">
       <UiStack>

@@ -1,5 +1,5 @@
 import { Button, Divider, Paper, Text } from '@mantine/core'
-import { AppIdentity, IdentityProvider, User } from '@pubkey-network/sdk'
+import { AppIdentity, IdentityProvider, PubkeyProfile as SdkPubKeyProfile, User } from '@pubkey-network/sdk'
 import { PubKeyProfile } from '@pubkey-program-library/anchor'
 import { UiDebugModal, UiGroup, UiStack } from '@pubkey-ui/core'
 import { PubkeyProfileUiIdentity } from './pubkey-profile-ui-identity'
@@ -10,7 +10,7 @@ export function PubkeyProfileUiCardIdentities({
   identityAdd,
   identityRemove,
 }: {
-  profile: PubKeyProfile
+  profile: PubKeyProfile | SdkPubKeyProfile
   user: User | undefined
   identityAdd?: (input: { provider: IdentityProvider; providerId: string }) => Promise<void>
   identityRemove?: (input: { provider: IdentityProvider; providerId: string }) => Promise<void>

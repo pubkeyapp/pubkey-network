@@ -1,4 +1,7 @@
-export { WalletMultiButton as WalletButton, WalletMultiIcon as WalletIcon } from '@pubkeyapp/wallet-adapter-mantine-ui'
+export {
+  WalletMultiButton as WalletButton,
+  WalletMultiIcon as WalletIcon,
+} from '@pubkey-network/wallet-adapter-mantine-ui'
 export * from './lib/solana-ui-account-balance'
 export * from './lib/solana-ui-account-balance-button'
 export * from './lib/solana-ui-account-balance-check'

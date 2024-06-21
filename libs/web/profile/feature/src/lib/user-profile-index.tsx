@@ -2,12 +2,15 @@ import { Button } from '@mantine/core'
 import { useGetUserProfile } from '@pubkey-network/web-profile-data-access'
 import { PubkeyProfileUiCard } from '@pubkey-network/web-profile-ui'
 import { UiDebug, UiInfo, UiLoader, UiStack } from '@pubkey-ui/core'
-import { NavLink } from 'react-router-dom'
+import { Navigate, NavLink } from 'react-router-dom'
 import { UserProfileLayout } from './user-profile-layout'
 
 export function UserProfileIndex() {
   const query = useGetUserProfile()
 
+  if (query.data?.username) {
+    return <Navigate to={`/profile/${query.data.username}`} replace />
+  }
   return (
     <UserProfileLayout>
       {query.isLoading ? (

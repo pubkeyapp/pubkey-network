@@ -223,6 +223,24 @@ export type PagingMeta = {
   totalCount?: Maybe<Scalars['Int']['output']>
 }
 
+export type PubkeyProfile = {
+  __typename?: 'PubkeyProfile'
+  authorities: Array<Scalars['String']['output']>
+  avatarUrl: Scalars['String']['output']
+  bump: Scalars['Int']['output']
+  feePayer: Scalars['String']['output']
+  identities: Array<PubkeyProfileIdentity>
+  publicKey: Scalars['String']['output']
+  username: Scalars['String']['output']
+}
+
+export type PubkeyProfileIdentity = {
+  __typename?: 'PubkeyProfileIdentity'
+  name: Scalars['String']['output']
+  provider: Scalars['String']['output']
+  providerId: Scalars['String']['output']
+}
+
 export type Query = {
   __typename?: 'Query'
   adminFindManyIdentity?: Maybe<Array<Identity>>
@@ -230,8 +248,9 @@ export type Query = {
   adminFindOneUser?: Maybe<User>
   anonRequestIdentityChallenge?: Maybe<IdentityChallenge>
   appConfig: AppConfig
-  getUserProfile: Scalars['JSON']['output']
-  getUserProfileByUsername: Scalars['JSON']['output']
+  getUserProfile?: Maybe<PubkeyProfile>
+  getUserProfileByProvider?: Maybe<PubkeyProfile>
+  getUserProfileByUsername?: Maybe<PubkeyProfile>
   getUserProfiles: Scalars['JSON']['output']
   me?: Maybe<User>
   solanaGetBalance?: Maybe<Scalars['String']['output']>
@@ -258,6 +277,11 @@ export type QueryAdminFindOneUserArgs = {
 
 export type QueryAnonRequestIdentityChallengeArgs = {
   input: IdentityRequestChallengeInput
+}
+
+export type QueryGetUserProfileByProviderArgs = {
+  provider: IdentityProvider
+  providerId: Scalars['String']['input']
 }
 
 export type QueryGetUserProfileByUsernameArgs = {
@@ -713,6 +737,24 @@ export type AnonVerifyIdentityChallengeMutation = {
   } | null
 }
 
+export type PubkeyProfileDetailsFragment = {
+  __typename?: 'PubkeyProfile'
+  publicKey: string
+  bump: number
+  username: string
+  avatarUrl: string
+  feePayer: string
+  authorities: Array<string>
+  identities: Array<{ __typename?: 'PubkeyProfileIdentity'; provider: string; providerId: string; name: string }>
+}
+
+export type PubkeyProfileIdentityDetailsFragment = {
+  __typename?: 'PubkeyProfileIdentity'
+  provider: string
+  providerId: string
+  name: string
+}
+
 export type CreateUserProfileMutationVariables = Exact<{
   publicKey: Scalars['String']['input']
 }>
@@ -745,13 +787,56 @@ export type SyncUserProfileMutation = { __typename?: 'Mutation'; synced?: any | 
 
 export type GetUserProfileQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetUserProfileQuery = { __typename?: 'Query'; item: any }
+export type GetUserProfileQuery = {
+  __typename?: 'Query'
+  item?: {
+    __typename?: 'PubkeyProfile'
+    publicKey: string
+    bump: number
+    username: string
+    avatarUrl: string
+    feePayer: string
+    authorities: Array<string>
+    identities: Array<{ __typename?: 'PubkeyProfileIdentity'; provider: string; providerId: string; name: string }>
+  } | null
+}
 
 export type GetUserProfileByUsernameQueryVariables = Exact<{
   username: Scalars['String']['input']
 }>
 
-export type GetUserProfileByUsernameQuery = { __typename?: 'Query'; item: any }
+export type GetUserProfileByUsernameQuery = {
+  __typename?: 'Query'
+  item?: {
+    __typename?: 'PubkeyProfile'
+    publicKey: string
+    bump: number
+    username: string
+    avatarUrl: string
+    feePayer: string
+    authorities: Array<string>
+    identities: Array<{ __typename?: 'PubkeyProfileIdentity'; provider: string; providerId: string; name: string }>
+  } | null
+}
+
+export type GetUserProfileByProviderQueryVariables = Exact<{
+  provider: IdentityProvider
+  providerId: Scalars['String']['input']
+}>
+
+export type GetUserProfileByProviderQuery = {
+  __typename?: 'Query'
+  item?: {
+    __typename?: 'PubkeyProfile'
+    publicKey: string
+    bump: number
+    username: string
+    avatarUrl: string
+    feePayer: string
+    authorities: Array<string>
+    identities: Array<{ __typename?: 'PubkeyProfileIdentity'; provider: string; providerId: string; name: string }>
+  } | null
+}
 
 export type GetUserProfilesQueryVariables = Exact<{ [key: string]: never }>
 
@@ -1043,6 +1128,27 @@ export const IdentityChallengeDetailsFragmentDoc = gql`
     verified
   }
 `
+export const PubkeyProfileIdentityDetailsFragmentDoc = gql`
+  fragment PubkeyProfileIdentityDetails on PubkeyProfileIdentity {
+    provider
+    providerId
+    name
+  }
+`
+export const PubkeyProfileDetailsFragmentDoc = gql`
+  fragment PubkeyProfileDetails on PubkeyProfile {
+    publicKey
+    bump
+    username
+    avatarUrl
+    feePayer
+    authorities
+    identities {
+      ...PubkeyProfileIdentityDetails
+    }
+  }
+  ${PubkeyProfileIdentityDetailsFragmentDoc}
+`
 export const UserDetailsFragmentDoc = gql`
   fragment UserDetails on User {
     avatarUrl
@@ -1209,13 +1315,27 @@ export const SyncUserProfileDocument = gql`
 `
 export const GetUserProfileDocument = gql`
   query getUserProfile {
-    item: getUserProfile
+    item: getUserProfile {
+      ...PubkeyProfileDetails
+    }
   }
+  ${PubkeyProfileDetailsFragmentDoc}
 `
 export const GetUserProfileByUsernameDocument = gql`
   query getUserProfileByUsername($username: String!) {
-    item: getUserProfileByUsername(username: $username)
+    item: getUserProfileByUsername(username: $username) {
+      ...PubkeyProfileDetails
+    }
   }
+  ${PubkeyProfileDetailsFragmentDoc}
+`
+export const GetUserProfileByProviderDocument = gql`
+  query getUserProfileByProvider($provider: IdentityProvider!, $providerId: String!) {
+    item: getUserProfileByProvider(provider: $provider, providerId: $providerId) {
+      ...PubkeyProfileDetails
+    }
+  }
+  ${PubkeyProfileDetailsFragmentDoc}
 `
 export const GetUserProfilesDocument = gql`
   query getUserProfiles {
@@ -1340,6 +1460,7 @@ const CheckUserProfileDocumentString = print(CheckUserProfileDocument)
 const SyncUserProfileDocumentString = print(SyncUserProfileDocument)
 const GetUserProfileDocumentString = print(GetUserProfileDocument)
 const GetUserProfileByUsernameDocumentString = print(GetUserProfileByUsernameDocument)
+const GetUserProfileByProviderDocumentString = print(GetUserProfileByProviderDocument)
 const GetUserProfilesDocumentString = print(GetUserProfilesDocument)
 const SolanaSignAndConfirmTransactionDocumentString = print(SolanaSignAndConfirmTransactionDocument)
 const AdminCreateUserDocumentString = print(AdminCreateUserDocument)
@@ -1798,6 +1919,27 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'getUserProfileByUsername',
+        'query',
+        variables,
+      )
+    },
+    getUserProfileByProvider(
+      variables: GetUserProfileByProviderQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: GetUserProfileByProviderQuery
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<GetUserProfileByProviderQuery>(GetUserProfileByProviderDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'getUserProfileByProvider',
         'query',
         variables,
       )

@@ -133,14 +133,31 @@ type PagingMeta {
   totalCount: Int
 }
 
+type PubkeyProfile {
+  authorities: [String!]!
+  avatarUrl: String!
+  bump: Int!
+  feePayer: String!
+  identities: [PubkeyProfileIdentity!]!
+  publicKey: String!
+  username: String!
+}
+
+type PubkeyProfileIdentity {
+  name: String!
+  provider: String!
+  providerId: String!
+}
+
 type Query {
   adminFindManyIdentity(input: IdentityAdminFindManyInput!): [Identity!]
   adminFindManyUser(input: UserAdminFindManyInput!): UserPaging!
   adminFindOneUser(userId: String!): User
   anonRequestIdentityChallenge(input: IdentityRequestChallengeInput!): IdentityChallenge
   appConfig: AppConfig!
-  getUserProfile: JSON!
-  getUserProfileByUsername(username: String!): JSON!
+  getUserProfile: PubkeyProfile
+  getUserProfileByProvider(provider: IdentityProvider!, providerId: String!): PubkeyProfile
+  getUserProfileByUsername(username: String!): PubkeyProfile
   getUserProfiles: JSON!
   me: User
   solanaGetBalance(account: String!): String

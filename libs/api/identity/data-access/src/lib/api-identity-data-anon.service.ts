@@ -94,10 +94,23 @@ export class ApiIdentityDataAnonService {
 
     if (identity?.owner && profile) {
       if (profile.username !== identity?.owner?.username) {
-        throw new Error(`TODO: Fix: Profile and Identity Owner username do not match`)
+        console.log({
+          profileUsername: profile.username,
+          identityOwnerUsername: identity?.owner?.username,
+        })
+        this.logger.warn(`Re-syncing profile username: ${identity?.owner?.username} => ${profile.username}`)
+        await this.core.data.user.update({
+          where: { id: identity?.owner?.id },
+          data: {
+            username: profile.username,
+            // TODO: Fix: once we have a name property on the PubKeyProfile
+            name: profile.username,
+            avatarUrl: profile.avatarUrl,
+          },
+        })
       }
-      avatarUrl = identity.owner.avatarUrl ?? undefined
-      username = identity.owner.username
+      avatarUrl = profile.avatarUrl
+      username = profile.username
     }
 
     // PubKey Profile is found, identity does not exist.

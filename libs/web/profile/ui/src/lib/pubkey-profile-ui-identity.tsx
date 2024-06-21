@@ -1,8 +1,8 @@
 import { Group, Stack, Text } from '@mantine/core'
-import { AppIdentity } from '@pubkey-network/sdk'
+import { AppIdentity, AppIdentityProvider } from '@pubkey-network/sdk'
 import { useAppConfig } from '@pubkey-network/web-core-data-access'
 import { UiAnchor } from '@pubkey-ui/core'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 import { PubkeyProfileUiProvider } from './pubkey-profile-ui-provider'
 
 export function useGetIdentityUrl(identity: AppIdentity) {
@@ -28,7 +28,7 @@ export function PubkeyProfileUiIdentity({ children, identity }: { children?: Rea
   return (
     <Group justify="space-between" w="100%">
       <Group gap="xs">
-        <PubkeyProfileUiProvider provider={identity.provider} />
+        <PubkeyProfileUiProvider provider={identity.provider as AppIdentityProvider} />
         <Stack gap={0}>
           <UiAnchor to={to}>
             <Text fw="bold" size="sm">

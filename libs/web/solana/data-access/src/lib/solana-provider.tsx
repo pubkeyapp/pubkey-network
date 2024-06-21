@@ -1,6 +1,6 @@
 import { AnchorProvider } from '@coral-xyz/anchor'
+import { WalletModalProvider } from '@pubkey-network/wallet-adapter-mantine-ui'
 import { useAppConfig } from '@pubkey-network/web-core-data-access'
-import { WalletModalProvider } from '@pubkeyapp/wallet-adapter-mantine-ui'
 import { WalletError } from '@solana/wallet-adapter-base'
 import {
   AnchorWallet,
