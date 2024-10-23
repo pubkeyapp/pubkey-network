@@ -4,14 +4,14 @@ import {
   PubkeyProfileUiSearchProviderForm,
   PubkeyProfileUiSearchUsernameForm,
 } from '@pubkey-network/web-profile-ui'
-import { PubKeyIdentityProvider } from '@pubkey-program-library/anchor'
+import { IdentityProvider } from '@pubkey-protocol/sdk'
 import { UiCard, UiDebug, UiPage, UiStack } from '@pubkey-ui/core'
 import { useState } from 'react'
 
 export function UserProfileDirectory() {
   const query = useGetUserProfiles()
   const [username, setUsername] = useState<string>('')
-  const [provider, setProvider] = useState<PubKeyIdentityProvider>(PubKeyIdentityProvider.Solana)
+  const [provider, setProvider] = useState<IdentityProvider>(IdentityProvider.Solana)
   const [providerId, setProviderId] = useState<string>('')
   return (
     <UiPage title="Profile Directory">
@@ -22,7 +22,7 @@ export function UserProfileDirectory() {
             loading={false}
             submit={async (res) => {
               setProviderId('')
-              setProvider(PubKeyIdentityProvider.Solana)
+              setProvider(IdentityProvider.Solana)
               setUsername(res.username ?? '')
             }}
           />

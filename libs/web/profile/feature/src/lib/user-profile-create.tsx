@@ -44,6 +44,8 @@ export function UserProfileCreate() {
                     avatarUrl,
                     feePayer: solanaFeePayer,
                     username,
+                    name: `${username}`,
+                    community: PublicKey.unique(),
                   })
                   .then(() => query.refetch())
               }}

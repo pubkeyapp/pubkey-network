@@ -61,6 +61,8 @@ export function UserProfileDetail() {
       avatarUrl: user?.avatarUrl as string,
       username: user?.username as string,
       feePayer: solanaFeePayer,
+      name: `${user?.username}`,
+      community: PublicKey.unique(),
     })
   }
 

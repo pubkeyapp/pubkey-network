@@ -1,25 +1,25 @@
 import { useSdk } from '@pubkey-network/web-core-data-access'
 import { uiToastLink } from '@pubkey-network/web-solana-data-access'
-import { CreateProfileOptions } from '@pubkey-program-library/sdk'
+import { ProfileCreateOptions } from '@pubkey-protocol/sdk'
 import { toastError } from '@pubkey-ui/core'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
-import { usePubkeyProfileSdk } from './use-pubkey-profile-sdk'
+import { usePubKeyProtocolSdk } from './use-pubkey-protocol-sdk'
 
 export function usePubkeyProfileProgram() {
   const { signTransaction } = useWallet()
   const graphqlSdk = useSdk()
-  const { solanaEndpoint, getExplorerUrl, sdk } = usePubkeyProfileSdk()
+  const { solanaEndpoint, getExplorerUrl, sdk } = usePubKeyProtocolSdk()
 
   const profileAccounts = useQuery({
     queryKey: ['pubkey-profile', 'profile', { solanaEndpoint }],
-    queryFn: () => sdk.getProfiles(),
+    queryFn: () => sdk.profileGetAll(),
   })
 
   const pointerAccounts = useQuery({
     queryKey: ['pubkey-profile', 'pointer', { solanaEndpoint }],
-    queryFn: () => sdk.getPointers(),
+    queryFn: () => sdk.pointerGetAll(),
   })
 
   const getProgramAccount = useQuery({
@@ -30,8 +30,8 @@ export function usePubkeyProfileProgram() {
 
   const createProfile = useMutation({
     mutationKey: ['pubkey-profile', 'createProfile', { solanaEndpoint }],
-    mutationFn: (options: CreateProfileOptions) =>
-      sdk.createProfile(options).then(async (unsigned) => {
+    mutationFn: (options: ProfileCreateOptions) =>
+      sdk.profileCreate(options).then(async ({ tx: unsigned }) => {
         const tx = await signTransaction!(unsigned)
         return graphqlSdk.solanaSignAndConfirmTransaction({
           tx: Array.from(tx.serialize()),

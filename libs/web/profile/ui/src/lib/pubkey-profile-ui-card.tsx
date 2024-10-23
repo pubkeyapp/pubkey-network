@@ -1,10 +1,9 @@
 import { Anchor, Group, Stack, Text } from '@mantine/core'
 import { IdentityProvider, PubkeyProfile as SdkPubKeyProfile, User } from '@pubkey-network/sdk'
-import { PubKeyProfile } from '@pubkey-program-library/anchor'
+import { PubKeyProfile } from '@pubkey-protocol/sdk'
 import { UiCard, UiDebugModal, UiGroup, UiStack } from '@pubkey-ui/core'
 import { Link } from 'react-router-dom'
 import { PubkeyProfileUiAvatar } from './pubkey-profile-ui-avatar'
-
 import { PubkeyProfileUiCardAuthorities } from './pubkey-profile-ui-card-authorities'
 import { PubkeyProfileUiCardIdentities } from './pubkey-profile-ui-card-identities'
 

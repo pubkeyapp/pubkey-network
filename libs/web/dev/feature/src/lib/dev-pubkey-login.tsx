@@ -239,6 +239,8 @@ export function IdentityUiPubkeyCreateProfile({ publicKey, refresh }: { publicKe
               avatarUrl,
               feePayer: solanaFeePayer,
               username,
+              name: `${username}`,
+              community: PublicKey.unique(),
             })
             .then(async () => {
               // Sleep for a bit to allow the profile to be created

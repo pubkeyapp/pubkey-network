@@ -1,22 +1,22 @@
 import { uiToastLink } from '@pubkey-network/web-solana-data-access'
 import {
-  AddAuthorityOptions,
-  AddIdentityOptions,
-  RemoveAuthorityOptions,
-  RemoveIdentityOptions,
-  UpdateAvatarUrlOptions,
-} from '@pubkey-program-library/sdk'
+  ProfileAuthorityAddOptions,
+  ProfileAuthorityRemoveOptions,
+  ProfileIdentityAddOptions,
+  ProfileIdentityRemoveOptions,
+  ProfileUpdateOptions,
+} from '@pubkey-protocol/sdk'
 import { toastError } from '@pubkey-ui/core'
 import { PublicKey } from '@solana/web3.js'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { usePubkeyProfileSdk } from './use-pubkey-profile-sdk'
+import { usePubKeyProtocolSdk } from './use-pubkey-protocol-sdk'
 
 export function usePubkeyProfileProgramAccount({ profilePda }: { profilePda: PublicKey }) {
-  const { sdk, solanaEndpoint, getExplorerUrl } = usePubkeyProfileSdk()
+  const { sdk, solanaEndpoint, getExplorerUrl } = usePubKeyProtocolSdk()
 
   const profileAccountQuery = useQuery({
     queryKey: ['pubkey-profile', 'fetchProfile', { solanaEndpoint, profilePda }],
-    queryFn: () => sdk.getProfile({ profilePda }),
+    queryFn: () => sdk.profileGet({ profile: profilePda.toString() }),
   })
 
   // const pointerAccountQuery = useQuery({
@@ -26,7 +26,15 @@ export function usePubkeyProfileProgramAccount({ profilePda }: { profilePda: Pub
 
   const updateAvatarUrl = useMutation({
     mutationKey: ['pubkey-profile', 'updateAvatarUrl', { solanaEndpoint, profilePda }],
-    mutationFn: (options: UpdateAvatarUrlOptions) => sdk.updateAvatarUrl(options),
+    mutationFn: (options: ProfileUpdateOptions) =>
+      sdk.profileUpdate({
+        avatarUrl: options.avatarUrl,
+        authority: '',
+        community: '',
+        feePayer: '',
+        name: '',
+        username: '',
+      }),
     onSuccess: (tx) => {
       uiToastLink({ label: 'View transaction', link: getExplorerUrl(`tx/${tx}`) })
       return profileAccountQuery.refetch()
@@ -35,7 +43,7 @@ export function usePubkeyProfileProgramAccount({ profilePda }: { profilePda: Pub
 
   const addAuthority = useMutation({
     mutationKey: ['pubkey-profile', 'addAuthority', { solanaEndpoint, profilePda }],
-    mutationFn: (options: AddAuthorityOptions) => sdk.addAuthority(options),
+    mutationFn: (options: ProfileAuthorityAddOptions) => sdk.profileAuthorityAdd(options),
     onError: (err) => toastError(`Error: ${err}`),
     onSuccess: (tx) => {
       uiToastLink({ label: 'View transaction', link: getExplorerUrl(`tx/${tx}`) })
@@ -45,7 +53,7 @@ export function usePubkeyProfileProgramAccount({ profilePda }: { profilePda: Pub
 
   const removeAuthority = useMutation({
     mutationKey: ['pubkey-profile', 'removeAuthority', { solanaEndpoint, profilePda }],
-    mutationFn: (options: RemoveAuthorityOptions) => sdk.removeAuthority(options),
+    mutationFn: (options: ProfileAuthorityRemoveOptions) => sdk.profileAuthorityRemove(options),
     onSuccess: (tx) => {
       uiToastLink({ label: 'View transaction', link: getExplorerUrl(`tx/${tx}`) })
       return profileAccountQuery.refetch()
@@ -54,7 +62,7 @@ export function usePubkeyProfileProgramAccount({ profilePda }: { profilePda: Pub
 
   const addIdentity = useMutation({
     mutationKey: ['pubkey-profile', 'addIdentity', { solanaEndpoint, profilePda }],
-    mutationFn: (options: AddIdentityOptions) => sdk.addIdentity(options),
+    mutationFn: (options: ProfileIdentityAddOptions) => sdk.profileIdentityAdd(options),
     onSuccess: (tx) =>
       Promise.all([
         //pointerAccountQuery.refetch(),
@@ -64,7 +72,7 @@ export function usePubkeyProfileProgramAccount({ profilePda }: { profilePda: Pub
 
   const removeIdentity = useMutation({
     mutationKey: ['pubkey-profile', 'removeIdentity', { solanaEndpoint, profilePda }],
-    mutationFn: (options: RemoveIdentityOptions) => sdk.removeIdentity(options),
+    mutationFn: (options: ProfileIdentityRemoveOptions) => sdk.profileIdentityRemove(options),
     onSuccess: (tx) =>
       Promise.all([
         //pointerAccountQuery.refetch(),

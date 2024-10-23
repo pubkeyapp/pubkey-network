@@ -1,5 +1,5 @@
 import { PubkeyProfile as SdkPubKeyProfile } from '@pubkey-network/sdk'
-import { PubKeyProfile } from '@pubkey-program-library/anchor'
+import { PubKeyProfile } from '@pubkey-protocol/sdk'
 import { UiAvatar } from '@pubkey-ui/core'
 
 export function PubkeyProfileUiAvatar({

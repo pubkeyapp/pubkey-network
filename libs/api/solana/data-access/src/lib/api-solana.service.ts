@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { ApiCoreService, CORE_APP_STARTED } from '@pubkey-network/api-core-data-access'
-import { AnchorKeypairWallet } from '@pubkey-program-library/sdk'
+import { AnchorKeypairWallet } from '@pubkey-protocol/sdk'
 import { getMint, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { TokenMetadata } from '@solana/spl-token-metadata'
 import {

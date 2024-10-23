@@ -1,30 +1,34 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { Identity, IdentityProvider } from '@prisma/client'
+import { Identity, IdentityProvider as PrismaIdentityProvider } from '@prisma/client'
 import { ApiCoreService } from '@pubkey-network/api-core-data-access'
 import { ApiSolanaService } from '@pubkey-network/api-solana-data-access'
-import { PUBKEY_PROFILE_PROGRAM_ID, PubKeyIdentityProvider, PubKeyProfile } from '@pubkey-program-library/anchor'
-import { PubKeyProfileSdk } from '@pubkey-program-library/sdk'
+import {
+  IdentityProvider as IdentityProvider,
+  PUBKEY_PROTOCOL_PROGRAM_ID,
+  PubKeyProfile,
+  PubKeyProtocolSdk,
+} from '@pubkey-protocol/sdk'
 import { Keypair, PublicKey } from '@solana/web3.js'
 
 @Injectable()
 export class ApiProfileService {
-  private readonly sdk: PubKeyProfileSdk
+  private readonly sdk: PubKeyProtocolSdk
   private readonly feePayer: Keypair
-  private readonly validProviders: PubKeyIdentityProvider[] = [
+  private readonly validProviders: PrismaIdentityProvider[] = [
     // Add more providers here once the protocol supports them
-    PubKeyIdentityProvider.Discord,
-    PubKeyIdentityProvider.Github,
-    PubKeyIdentityProvider.Google,
-    PubKeyIdentityProvider.Solana,
-    PubKeyIdentityProvider.Twitter,
+    PrismaIdentityProvider.Discord,
+    // PrismaIdentityProvider.Github,
+    PrismaIdentityProvider.Google,
+    PrismaIdentityProvider.Solana,
+    // PrismaIdentityProvider.X,
   ]
 
   constructor(private readonly core: ApiCoreService, private readonly solana: ApiSolanaService) {
     this.feePayer = this.core.config.solanaFeePayer
-    this.sdk = new PubKeyProfileSdk({
+    this.sdk = new PubKeyProtocolSdk({
       connection: this.solana.connection,
       provider: this.solana.getAnchorProvider(this.feePayer),
-      programId: PUBKEY_PROFILE_PROGRAM_ID,
+      programId: PUBKEY_PROTOCOL_PROGRAM_ID,
     })
   }
 
@@ -35,11 +39,13 @@ export class ApiProfileService {
     }
     const authority = ensureAuthority(user.identities, publicKey)
 
-    const transaction = await this.sdk.createProfile({
+    const { tx: transaction } = await this.sdk.profileCreate({
       username: user.username,
       avatarUrl: user.avatarUrl ?? '',
       feePayer: this.feePayer.publicKey,
       authority,
+      community: PublicKey.unique(),
+      name: user.username,
     })
 
     return transaction.serialize()
@@ -49,8 +55,13 @@ export class ApiProfileService {
     return `${this.core.config.apiUrl}${path}`
   }
 
-  async profileIdentityAdd(userId: string, publicKey: string, identityProvider: IdentityProvider, providerId: string) {
-    const provider = convertToPubKeyIdentityProvider(identityProvider)
+  async profileIdentityAdd(
+    userId: string,
+    publicKey: string,
+    identityProvider: PrismaIdentityProvider,
+    providerId: string,
+  ) {
+    const provider = convertToIdentityProvider(identityProvider)
     this.ensureValidProvider(provider)
     const { user, profile } = await this.ensureUserProfile(userId)
 
@@ -64,19 +75,20 @@ export class ApiProfileService {
 
     const authority = ensureAuthority(user.identities, publicKey)
 
-    const nickname =
+    const name =
       (identity.profile as { username?: string })?.username ??
       (identity.profile as { name?: string })?.name ??
       identity.name ??
       identity.providerId
 
-    const transaction = await this.sdk.addIdentity({
+    const transaction = await this.sdk.profileIdentityAdd({
       authority,
       feePayer: this.feePayer.publicKey,
       username: user.username,
       provider,
       providerId,
-      nickname,
+      name,
+      community: PublicKey.unique(),
     })
     transaction.sign([this.feePayer])
 
@@ -86,10 +98,10 @@ export class ApiProfileService {
   async profileIdentityRemove(
     userId: string,
     publicKey: string,
-    identityProvider: IdentityProvider,
+    identityProvider: PrismaIdentityProvider,
     providerId: string,
   ) {
-    const provider = convertToPubKeyIdentityProvider(identityProvider)
+    const provider = convertToIdentityProvider(identityProvider)
     this.ensureValidProvider(provider)
     const { user, profile } = await this.ensureUserProfile(userId)
 
@@ -108,12 +120,13 @@ export class ApiProfileService {
 
     const authority = ensureAuthority(user.identities, publicKey)
 
-    const transaction = await this.sdk.removeIdentity({
+    const transaction = await this.sdk.profileIdentityRemove({
       authority,
       feePayer: this.feePayer.publicKey,
       username: user.username,
       provider,
       providerId,
+      community: '',
     })
     transaction.sign([this.feePayer])
 
@@ -196,20 +209,20 @@ export class ApiProfileService {
       throw new Error('User not found')
     }
 
-    return this.sdk.getProfileByUsernameNullable({ username: user.username })
+    return this.sdk.profileGetByUsernameNullable({ username: user.username })
   }
 
   async getUserProfileByUsername(username: string): Promise<PubKeyProfile | null> {
     this.ensureValidUsername(username)
 
     try {
-      return await this.sdk.getProfileByUsernameNullable({ username })
+      return await this.sdk.profileGetByUsernameNullable({ username })
     } catch (e) {
       throw new NotFoundException(`User profile not found for username ${username}`)
     }
   }
 
-  async getUserProfileByProvider(provider: PubKeyIdentityProvider, providerId: string): Promise<PubKeyProfile | null> {
+  async getUserProfileByProvider(provider: IdentityProvider, providerId: string): Promise<PubKeyProfile | null> {
     try {
       this.ensureValidProvider(provider)
     } catch (e) {
@@ -222,19 +235,19 @@ export class ApiProfileService {
       throw new NotFoundException(`Invalid provider ID for provider ${provider}`)
     }
     try {
-      return await this.sdk.getProfileByProviderNullable({ provider, providerId })
+      return await this.sdk.profileGetByProviderNullable({ provider, providerId })
     } catch (e) {
       throw new NotFoundException(`User profile not found for provider ${provider} and providerId ${providerId}`)
     }
   }
 
   async getUserProfileByProviderNullable(
-    provider: IdentityProvider,
+    provider: PrismaIdentityProvider,
     providerId: string,
   ): Promise<PubKeyProfile | null> {
     try {
-      return await this.sdk.getProfileByProviderNullable({
-        provider: convertToPubKeyIdentityProvider(provider),
+      return await this.sdk.profileGetByProviderNullable({
+        provider: convertToIdentityProvider(provider),
         providerId,
       })
     } catch (e) {
@@ -243,7 +256,7 @@ export class ApiProfileService {
   }
 
   async getUserProfiles(): Promise<PubKeyProfile[]> {
-    return this.sdk.getProfiles().then((res) => res.sort((a, b) => a.username.localeCompare(b.username)))
+    return this.sdk.profileGetAll().then((res) => res.sort((a, b) => a.username.localeCompare(b.username)))
   }
 
   private async ensureUserProfile(userId: string) {
@@ -253,7 +266,7 @@ export class ApiProfileService {
     }
 
     const publicKeys: string[] = user.identities
-      .filter((i) => i.provider === IdentityProvider.Solana)
+      .filter((i) => i.provider === PrismaIdentityProvider.Solana)
       .map((i) => i.providerId)
     const profile = await this.findProfile({ username: user.username, publicKeys })
     if (!profile) {
@@ -264,7 +277,7 @@ export class ApiProfileService {
   }
 
   private async findProfile({ username, publicKeys }: { username: string; publicKeys: string[] }) {
-    const profile = await this.sdk.getProfileByUsernameNullable({ username })
+    const profile = await this.sdk.profileGetByUsernameNullable({ username })
 
     if (profile) {
       console.log(`No profile found`)
@@ -274,8 +287,8 @@ export class ApiProfileService {
     const profiles = await Promise.all(
       publicKeys.map((providerId) => {
         console.log(` -> Searching ${providerId}`)
-        return this.sdk.getProfileByProviderNullable({
-          provider: PubKeyIdentityProvider.Solana,
+        return this.sdk.profileGetByProviderNullable({
+          provider: IdentityProvider.Solana,
           providerId,
         })
       }),
@@ -291,17 +304,17 @@ export class ApiProfileService {
     throw new Error('User profile not found')
   }
 
-  private ensureValidProvider(provider: PubKeyIdentityProvider) {
-    if (!this.validProviders.includes(provider)) {
+  private ensureValidProvider(provider: IdentityProvider) {
+    if (!this.validProviders.includes(provider as PrismaIdentityProvider)) {
       throw new Error(`Invalid provider: ${provider}`)
     }
   }
 
-  private ensureValidProviderId(provider: PubKeyIdentityProvider, providerId: string) {
-    if (provider === PubKeyIdentityProvider.Solana && !isSolanaPublicKey(providerId)) {
+  private ensureValidProviderId(provider: IdentityProvider, providerId: string) {
+    if (provider === IdentityProvider.Solana && !isSolanaPublicKey(providerId)) {
       throw new Error(`Invalid provider ID for ${provider}.`)
     }
-    if (provider !== PubKeyIdentityProvider.Solana && !isNumericString(providerId)) {
+    if (provider !== IdentityProvider.Solana && !isNumericString(providerId)) {
       throw new Error(`Invalid provider ID for ${provider}.`)
     }
   }
@@ -353,7 +366,7 @@ function ensureAuthority(identities: Identity[], publicKey: string) {
   return authority
 }
 
-async function ensureUserIdentity(identities: Identity[], provider: IdentityProvider, providerId: string) {
+async function ensureUserIdentity(identities: Identity[], provider: PrismaIdentityProvider, providerId: string) {
   const identity = identities.find((i) => i.provider === provider && i.providerId === providerId)
 
   if (!identity) {
@@ -382,18 +395,18 @@ function diffProfileDetails(
   }
 }
 
-export function convertToPubKeyIdentityProvider(provider: IdentityProvider): PubKeyIdentityProvider {
+export function convertToIdentityProvider(provider: PrismaIdentityProvider): IdentityProvider {
   switch (provider.toString()) {
     case 'Discord':
-      return PubKeyIdentityProvider.Discord
+      return IdentityProvider.Discord
     case 'GitHub':
-      return PubKeyIdentityProvider.Github
+      return IdentityProvider.Github
     case 'Google':
-      return PubKeyIdentityProvider.Google
+      return IdentityProvider.Google
     case 'Solana':
-      return PubKeyIdentityProvider.Solana
-    case 'Twitter':
-      return PubKeyIdentityProvider.Twitter
+      return IdentityProvider.Solana
+    case 'X':
+      return IdentityProvider.X
     default:
       throw new Error(`Invalid provider: ${provider}`)
   }

@@ -1,6 +1,6 @@
 import { Button, Group, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { CreateProfileOptions } from '@pubkey-program-library/sdk'
+import { ProfileCreateOptions } from '@pubkey-protocol/sdk'
 import { UiStack } from '@pubkey-ui/core'
 import { PublicKey } from '@solana/web3.js'
 import { ReactNode, useMemo } from 'react'
@@ -17,15 +17,17 @@ export function PubkeyProfileUiCreateForm({
   loading: boolean
   children?: ReactNode
   authority: PublicKey
-  submit: (input: Omit<CreateProfileOptions, 'feePayer'>) => Promise<void>
+  submit: (input: Omit<ProfileCreateOptions, 'feePayer'>) => Promise<void>
   username: string
   avatarUrl: string
 }) {
-  const form = useForm<Omit<CreateProfileOptions, 'feePayer'>>({
+  const form = useForm<Omit<ProfileCreateOptions, 'feePayer'>>({
     initialValues: {
       authority,
       avatarUrl,
       username,
+      community: PublicKey.unique(),
+      name: username,
     },
   })
 

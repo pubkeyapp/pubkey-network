@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common'
 import { ApiProfileService } from '@pubkey-network/api-profile-data-access'
-import { PubKeyIdentityProvider } from '@pubkey-program-library/anchor'
+import { IdentityProvider } from '@pubkey-protocol/sdk'
 
 @Controller('profiles')
 export class ApiProfileController {
@@ -27,10 +27,7 @@ export class ApiProfileController {
   }
 
   @Get('provider/:provider/:providerId')
-  async getProfileByProvider(
-    @Param('provider') provider: PubKeyIdentityProvider,
-    @Param('providerId') providerId: string,
-  ) {
+  async getProfileByProvider(@Param('provider') provider: IdentityProvider, @Param('providerId') providerId: string) {
     return this.service.getUserProfileByProvider(provider, providerId)
   }
 

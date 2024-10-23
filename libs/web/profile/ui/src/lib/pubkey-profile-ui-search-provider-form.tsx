@@ -1,6 +1,6 @@
 import { ActionIcon, Group, Select, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { PubKeyIdentityProvider } from '@pubkey-program-library/anchor'
+import { IdentityProvider } from '@pubkey-protocol/sdk'
 import { getEnumOptions } from '@pubkey-ui/core'
 import { IconSearch } from '@tabler/icons-react'
 
@@ -11,11 +11,11 @@ export function PubkeyProfileUiSearchProviderForm({
   submit,
 }: {
   loading: boolean
-  provider: PubKeyIdentityProvider
+  provider: IdentityProvider
   providerId: string
-  submit: (input: { provider: PubKeyIdentityProvider; providerId: string }) => Promise<void>
+  submit: (input: { provider: IdentityProvider; providerId: string }) => Promise<void>
 }) {
-  const form = useForm<{ provider: PubKeyIdentityProvider; providerId: string }>({
+  const form = useForm<{ provider: IdentityProvider; providerId: string }>({
     initialValues: {
       provider,
       providerId,
@@ -26,7 +26,7 @@ export function PubkeyProfileUiSearchProviderForm({
     <form onSubmit={form.onSubmit((values) => submit(values))}>
       <Group>
         <Select
-          data={getEnumOptions(PubKeyIdentityProvider)}
+          data={getEnumOptions(IdentityProvider)}
           name="provider"
           label="Provider"
           description="The provider of the profile to search for."

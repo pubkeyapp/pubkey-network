@@ -1,6 +1,6 @@
 import { Button, Divider, Paper, Text } from '@mantine/core'
 import { AppIdentity, IdentityProvider, PubkeyProfile as SdkPubKeyProfile, User } from '@pubkey-network/sdk'
-import { PubKeyProfile } from '@pubkey-program-library/anchor'
+import { PubKeyProfile } from '@pubkey-protocol/sdk'
 import { UiDebugModal, UiGroup, UiStack } from '@pubkey-ui/core'
 import { PubkeyProfileUiIdentity } from './pubkey-profile-ui-identity'
 

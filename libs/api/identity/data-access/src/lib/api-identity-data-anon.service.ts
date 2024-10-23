@@ -8,7 +8,7 @@ import {
   getRequestDetails,
   slugifyId,
 } from '@pubkey-network/api-core-data-access'
-import { PubKeyProfile } from '@pubkey-program-library/anchor'
+import { PubKeyProfile } from '@pubkey-protocol/sdk'
 import { ApiIdentitySolanaService } from './api-identity-solana.service'
 import { IdentityRequestChallengeInput } from './dto/identity-request-challenge-input'
 import { IdentityVerifyChallengeInput } from './dto/identity-verify-challenge-input'
