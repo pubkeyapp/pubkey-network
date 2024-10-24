@@ -14,7 +14,7 @@ import { UserProfileLayout } from './user-profile-layout'
 export function UserProfileCreate() {
   const query = useGetUserProfile()
   const mutation = useCreateUserProfile()
-  const { solanaFeePayer } = useAppConfig()
+  const { pubkeyProtocolSigner } = useAppConfig()
   const { user } = useAuth()
   const { publicKey } = useWallet()
   const { createProfile } = usePubkeyProfileProgram()
@@ -42,7 +42,7 @@ export function UserProfileCreate() {
                   .mutateAsync({
                     authority: publicKey as PublicKey,
                     avatarUrl,
-                    feePayer: solanaFeePayer,
+                    feePayer: pubkeyProtocolSigner,
                     username,
                     name: `${username}`,
                     community: PublicKey.unique(),

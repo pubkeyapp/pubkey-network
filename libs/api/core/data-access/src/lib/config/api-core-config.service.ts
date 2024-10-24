@@ -25,8 +25,8 @@ export class ApiCoreConfigService {
       authSolanaEnabled: this.authSolanaEnabled,
       authTelegramEnabled: this.authTelegramEnabled,
       authTwitterEnabled: this.authTwitterEnabled,
+      pubkeyProtocolSigner: this.pubkeyProtocolSigner.publicKey.toString(),
       solanaEndpoint: this.solanaEndpointPublic,
-      solanaFeePayer: this.solanaFeePayer.publicKey.toString(),
     }
   }
 
@@ -242,6 +242,14 @@ export class ApiCoreConfigService {
     return '/api'
   }
 
+  get pubkeyProtocolSigner(): Keypair {
+    return this.service.get<Keypair>('pubkeyProtocolSigner') as Keypair
+  }
+
+  get pubkeyProtocolSignerMinimalBalance(): number {
+    return this.service.get<number>('pubkeyProtocolSignerMinimalBalance') as number
+  }
+
   get sessionSecret() {
     return this.service.get<string>('sessionSecret') as string
   }
@@ -252,14 +260,6 @@ export class ApiCoreConfigService {
 
   get solanaEndpointPublic() {
     return this.service.get<string>('solanaEndpointPublic') as string
-  }
-
-  get solanaFeePayer(): Keypair {
-    return this.service.get<Keypair>('solanaFeePayer') as Keypair
-  }
-
-  get solanaFeePayerMinimalBalance(): number {
-    return this.service.get<number>('solanaFeePayerMinimalBalance') as number
   }
 
   get webUrl(): string {

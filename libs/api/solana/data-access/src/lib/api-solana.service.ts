@@ -4,8 +4,7 @@ import { OnEvent } from '@nestjs/event-emitter'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { ApiCoreService, CORE_APP_STARTED } from '@pubkey-network/api-core-data-access'
 import { AnchorKeypairWallet } from '@pubkey-protocol/sdk'
-import { getMint, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { TokenMetadata } from '@solana/spl-token-metadata'
+import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
   AccountInfo,
   Connection,
@@ -27,20 +26,20 @@ export class ApiSolanaService {
 
   @OnEvent(CORE_APP_STARTED)
   async onApplicationStarted() {
-    this.logger.verbose(`Solana Fee Payer: ${this.core.config.solanaFeePayer.publicKey}`)
+    this.logger.verbose(`PubKey Protocol Signer: ${this.core.config.pubkeyProtocolSigner.publicKey}`)
 
-    await this.solanaRequestAirdrop(this.core.config.solanaFeePayer.publicKey.toString()).then((res) => {
+    await this.solanaRequestAirdrop(this.core.config.pubkeyProtocolSigner.publicKey.toString()).then((res) => {
       this.logger.verbose(`Fee Payer Balances: ${res.sol} SOL`)
     })
   }
 
   @Cron(CronExpression.EVERY_MINUTE)
-  async ensureFeePayerBalance() {
-    const feePayer = this.core.config.solanaFeePayer.publicKey
-    const minimal = this.core.config.solanaFeePayerMinimalBalance
-    const balance = await this.connection.getBalance(feePayer)
+  async ensureSignerBalance() {
+    const signer = this.core.config.pubkeyProtocolSigner.publicKey
+    const minimal = this.core.config.pubkeyProtocolSignerMinimalBalance
+    const balance = await this.connection.getBalance(signer)
     if (balance < LAMPORTS_PER_SOL * minimal) {
-      this.logger.warn(`FEE PAYER WARNING: "${feePayer}"`)
+      this.logger.warn(`SIGNER WARNING: "${signer}"`)
       this.logger.warn(`Balance is low: ${balance / LAMPORTS_PER_SOL} SOL, recommended: ${minimal} SOL`)
     }
     return balance
@@ -50,26 +49,6 @@ export class ApiSolanaService {
     return this.connection
       .getParsedAccountInfo(new PublicKey(publicKey))
       .then((res) => (res.value ? (res.value as SolanaAccountInfo) : null))
-  }
-  async getMint(publicKey: PublicKey | string, programId: PublicKey = TOKEN_2022_PROGRAM_ID) {
-    return getMint(this.connection, new PublicKey(publicKey), 'confirmed', programId)
-  }
-
-  async getAccountTokenMetadata(mint: PublicKey | string) {
-    const account = await this.getAccount(mint)
-    if (!account) {
-      throw new Error('Mint account not found on Solana')
-    }
-    if (!account.data?.parsed?.info?.extensions) {
-      throw new Error('Mint account has no extensions')
-    }
-    const extensions: { extension: string; state: TokenMetadata }[] = account.data.parsed.info.extensions
-    const metadata = extensions.find((e) => e.extension === 'tokenMetadata')
-    if (!metadata?.state) {
-      throw new Error('Mint account has no tokenMetadata')
-    }
-
-    return metadata.state
   }
 
   async getBalance(account: string) {
@@ -143,7 +122,7 @@ export class ApiSolanaService {
 
     const transaction = VersionedTransaction.deserialize(tx)
 
-    transaction.sign([this.core.config.solanaFeePayer])
+    transaction.sign([this.core.config.pubkeyProtocolSigner])
 
     console.log(`transaction`, transaction)
     console.log(`transaction`, transaction.signatures)

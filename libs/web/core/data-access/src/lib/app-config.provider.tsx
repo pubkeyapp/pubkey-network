@@ -15,8 +15,8 @@ export interface AuthProviderContext {
   authEnabled: boolean
   enabledProviders: IdentityProvider[]
   getExplorerUrl: (path: string) => string
+  pubkeyProtocolSigner: PublicKey
   solanaEndpoint: string
-  solanaFeePayer: PublicKey
 }
 
 const Context = createContext<AuthProviderContext>({} as AuthProviderContext)
@@ -67,8 +67,8 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
     enabledProviders,
     getExplorerUrl: (path: string) =>
       `https://explorer.solana.com/${path}${getClusterUrlParam(appConfig?.solanaEndpoint)}`,
+    pubkeyProtocolSigner: new PublicKey(appConfig.pubkeyProtocolSigner),
     solanaEndpoint: appConfig?.solanaEndpoint,
-    solanaFeePayer: new PublicKey(appConfig.solanaFeePayer),
   }
 
   return <Context.Provider value={value}>{children}</Context.Provider>

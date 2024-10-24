@@ -214,7 +214,7 @@ export function IdentityUiPubkeyCreateProfile({ publicKey, refresh }: { publicKe
   const { profile } = useGetPubKeyProfile({ providerId: publicKey.toString() })
 
   const query = useGetUserProfile()
-  const { solanaFeePayer } = useAppConfig()
+  const { pubkeyProtocolSigner } = useAppConfig()
   const { createProfile } = usePubkeyProfileProgram()
   if (profile) {
     refresh()
@@ -237,7 +237,7 @@ export function IdentityUiPubkeyCreateProfile({ publicKey, refresh }: { publicKe
             .mutateAsync({
               authority: publicKey as PublicKey,
               avatarUrl,
-              feePayer: solanaFeePayer,
+              feePayer: pubkeyProtocolSigner,
               username,
               name: `${username}`,
               community: PublicKey.unique(),

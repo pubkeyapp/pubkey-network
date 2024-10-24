@@ -6,8 +6,8 @@ fragment AppConfigDetails on AppConfig {
   authRegisterEnabled
   authSolanaEnabled
   authTwitterEnabled
+  pubkeyProtocolSigner
   solanaEndpoint
-  solanaFeePayer
 }
 
 fragment PagingMetaDetails on PagingMeta {

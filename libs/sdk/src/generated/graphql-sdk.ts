@@ -34,8 +34,8 @@ export type AppConfig = {
   authSolanaEnabled: Scalars['Boolean']['output']
   authTelegramEnabled: Scalars['Boolean']['output']
   authTwitterEnabled: Scalars['Boolean']['output']
+  pubkeyProtocolSigner: Scalars['String']['output']
   solanaEndpoint: Scalars['String']['output']
-  solanaFeePayer: Scalars['String']['output']
 }
 
 export type Identity = {
@@ -465,8 +465,8 @@ export type AppConfigDetailsFragment = {
   authRegisterEnabled: boolean
   authSolanaEnabled: boolean
   authTwitterEnabled: boolean
+  pubkeyProtocolSigner: string
   solanaEndpoint: string
-  solanaFeePayer: string
 }
 
 export type PagingMetaDetailsFragment = {
@@ -497,8 +497,8 @@ export type AppConfigQuery = {
     authRegisterEnabled: boolean
     authSolanaEnabled: boolean
     authTwitterEnabled: boolean
+    pubkeyProtocolSigner: string
     solanaEndpoint: string
-    solanaFeePayer: string
   }
 }
 
@@ -1085,8 +1085,8 @@ export const AppConfigDetailsFragmentDoc = gql`
     authRegisterEnabled
     authSolanaEnabled
     authTwitterEnabled
+    pubkeyProtocolSigner
     solanaEndpoint
-    solanaFeePayer
   }
 `
 export const PagingMetaDetailsFragmentDoc = gql`

@@ -24,7 +24,7 @@ export class ApiProfileService {
   ]
 
   constructor(private readonly core: ApiCoreService, private readonly solana: ApiSolanaService) {
-    this.feePayer = this.core.config.solanaFeePayer
+    this.feePayer = this.core.config.pubkeyProtocolSigner
     this.sdk = new PubKeyProtocolSdk({
       connection: this.solana.connection,
       provider: this.solana.getAnchorProvider(this.feePayer),

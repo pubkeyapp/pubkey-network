@@ -1,3 +1,4 @@
+import { getKeypairFromByteArray } from '@pubkey-protocol/sdk'
 import { Keypair } from '@solana/web3.js'
 
 // Remove trailing slashes from the URLs to avoid double slashes
@@ -63,10 +64,10 @@ export interface ApiCoreConfig {
   jwtSecret: string
   port: number
   sessionSecret: string
+  pubkeyProtocolSigner: Keypair
+  pubkeyProtocolSignerMinimalBalance: number
   solanaEndpoint: string
   solanaEndpointPublic: string
-  solanaFeePayer: Keypair
-  solanaFeePayerMinimalBalance: number
   webUrl: string
 }
 
@@ -105,12 +106,13 @@ export function configuration(): ApiCoreConfig {
     host: process.env['HOST'] as string,
     jwtSecret: process.env['JWT_SECRET'] as string,
     port: parseInt(process.env['PORT'] as string, 10) || 3000,
+    pubkeyProtocolSigner: getKeypairFromByteArray(
+      JSON.parse(process.env['PUBKEY_PROTOCOL_SIGNER_SECRET_KEY'] as string),
+    ),
+    pubkeyProtocolSignerMinimalBalance:
+      parseFloat(process.env['PUBKEY_PROTOCOL_SIGNER_MINIMAL_BALANCE'] as string) || 1,
     solanaEndpoint: process.env['SOLANA_ENDPOINT'] as string,
     solanaEndpointPublic: process.env['SOLANA_ENDPOINT_PUBLIC'] as string,
-    solanaFeePayer: Keypair.fromSecretKey(
-      Uint8Array.from(JSON.parse(process.env['SOLANA_FEE_PAYER_SECRET_KEY'] as string)),
-    ),
-    solanaFeePayerMinimalBalance: parseFloat(process.env['SOLANA_FEE_PAYER_MINIMAL_BALANCE'] as string) || 1,
     sessionSecret: process.env['SESSION_SECRET'] as string,
     webUrl: WEB_URL,
   }
