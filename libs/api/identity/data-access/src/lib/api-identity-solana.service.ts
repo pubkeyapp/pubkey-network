@@ -76,13 +76,15 @@ export class ApiIdentitySolanaService {
   async ensureIdentityOwner(ownerId: string, provider: IdentityProvider, providerId: string) {
     const found = await this.core.data.identity.findFirst({
       where: {
-        ownerId,
         provider,
         providerId,
       },
     })
     if (!found) {
       throw new Error(`Identity ${provider} ${providerId} not found`)
+    }
+    if (found.ownerId !== ownerId) {
+      throw new Error(`Identity ${provider} ${providerId} is not owned by ${ownerId}`)
     }
     return found
   }

@@ -32,7 +32,7 @@ export function IdentityProviderSolanaLink({ children, refresh }: { children: Re
       })
       .catch((err) => {
         console.log('Error linking identity', err)
-        toastError('Error linking identity')
+        toastError(err)
       })
   }
 
@@ -48,7 +48,7 @@ export function IdentityProviderSolanaLink({ children, refresh }: { children: Re
       })
       .catch((err) => {
         console.log('error linking identity', err)
-        toastError('Error linking identity')
+        toastError(err)
       })
   }
 
