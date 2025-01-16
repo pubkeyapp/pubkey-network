@@ -183,6 +183,7 @@ type User {
   id: String!
   identities: [Identity!]
   name: String
+  onboarded: Boolean
   profile: String
   profileUrl: String!
   role: UserRole
@@ -208,6 +209,7 @@ input UserAdminUpdateInput {
   avatarUrl: String
   developer: Boolean
   name: String
+  onboarded: Boolean
   role: UserRole
   status: UserStatus
   username: String

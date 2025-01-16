@@ -13,7 +13,7 @@ export function getIdentityProviderColor(provider: IdentityProvider) {
     case IdentityProvider.Telegram:
       return '#0088cc'
     case IdentityProvider.X:
-      return '#1DA1F2'
+      return '#000'
     default:
       return '#333333'
   }

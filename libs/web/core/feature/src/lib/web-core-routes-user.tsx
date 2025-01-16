@@ -1,3 +1,4 @@
+import { AuthUiUserOnboardedGuard } from '@pubkey-network/web-auth-ui'
 import { UiDashboard } from '@pubkey-network/web-core-ui'
 import { UserDirectoryRoutes, UserProfileRoutes } from '@pubkey-network/web-protocol-feature'
 import { SettingsFeature } from '@pubkey-network/web-settings-feature'
@@ -26,9 +27,15 @@ const routes: RouteObject[] = [
 
 export default function WebCoreRoutesUser() {
   return useRoutes([
-    { index: true, element: <Navigate to="dashboard" replace /> },
-    { path: '/dashboard', element: <UiDashboard links={links} /> },
-    ...routes,
+    {
+      // This guard makes sure that the user is onboarded
+      element: <AuthUiUserOnboardedGuard />,
+      children: [
+        { index: true, element: <Navigate to="dashboard" replace /> },
+        { path: '/dashboard', element: <UiDashboard links={links} /> },
+        ...routes,
+      ],
+    },
     { path: '*', element: <UiNotFound to="/dashboard" /> },
   ])
 }

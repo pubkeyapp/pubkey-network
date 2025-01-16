@@ -3,6 +3,7 @@ import { ellipsify, Identity } from '@pubkey-network/sdk'
 import { UiCard, UiDebugModal, UiGroup, UiStack } from '@pubkey-ui/core'
 import { IconDotsVertical, IconTrash } from '@tabler/icons-react'
 import { IdentityUiAvatar } from './identity-ui-avatar'
+import { IdentityUiIcon } from './identity-ui-icon'
 import { IdentityUiLink } from './identity-ui-link'
 import { IdentityUiSolanaVerifyButton } from './identity-ui-solana-verify-button'
 import { IdentityUiVerified } from './identity-ui-verified'
@@ -11,10 +12,12 @@ export function IdentityUiList({
   deleteIdentity,
   refresh,
   items,
+  showProvider = false,
 }: {
   refresh?: () => void
   deleteIdentity?: (id: string) => void
   items: Identity[]
+  showProvider?: boolean
 }) {
   return (
     <UiStack>
@@ -22,6 +25,7 @@ export function IdentityUiList({
         <UiCard key={item.id}>
           <Group justify="space-between">
             <Group>
+              {showProvider ? <IdentityUiIcon provider={item.provider} /> : null}
               <IdentityUiAvatar item={item} />
               <UiGroup gap="xs" align="center">
                 {item.profile?.username ? (

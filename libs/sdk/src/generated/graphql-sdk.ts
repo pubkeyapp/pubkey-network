@@ -330,6 +330,7 @@ export type User = {
   id: Scalars['String']['output']
   identities?: Maybe<Array<Identity>>
   name?: Maybe<Scalars['String']['output']>
+  onboarded?: Maybe<Scalars['Boolean']['output']>
   profile?: Maybe<Scalars['String']['output']>
   profileUrl: Scalars['String']['output']
   role?: Maybe<UserRole>
@@ -355,6 +356,7 @@ export type UserAdminUpdateInput = {
   avatarUrl?: InputMaybe<Scalars['String']['input']>
   developer?: InputMaybe<Scalars['Boolean']['input']>
   name?: InputMaybe<Scalars['String']['input']>
+  onboarded?: InputMaybe<Scalars['Boolean']['input']>
   role?: InputMaybe<UserRole>
   status?: InputMaybe<UserStatus>
   username?: InputMaybe<Scalars['String']['input']>
@@ -402,6 +404,7 @@ export type LoginMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -428,6 +431,7 @@ export type RegisterMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -448,6 +452,7 @@ export type MeQuery = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -569,6 +574,7 @@ export type AdminFindManyIdentityQuery = {
       developer?: boolean | null
       id: string
       name?: string | null
+      onboarded?: boolean | null
       profile?: string | null
       profileUrl: string
       role?: UserRole | null
@@ -856,6 +862,7 @@ export type UserDetailsFragment = {
   developer?: boolean | null
   id: string
   name?: string | null
+  onboarded?: boolean | null
   profile?: string | null
   profileUrl: string
   role?: UserRole | null
@@ -877,6 +884,7 @@ export type AdminCreateUserMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -907,6 +915,7 @@ export type AdminFindManyUserQuery = {
       developer?: boolean | null
       id: string
       name?: string | null
+      onboarded?: boolean | null
       profile?: string | null
       profileUrl: string
       role?: UserRole | null
@@ -953,6 +962,7 @@ export type AdminFindOneUserQuery = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -976,6 +986,7 @@ export type AdminUpdateUserMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -1000,6 +1011,7 @@ export type UserFindManyUserQuery = {
       developer?: boolean | null
       id: string
       name?: string | null
+      onboarded?: boolean | null
       profile?: string | null
       profileUrl: string
       role?: UserRole | null
@@ -1033,6 +1045,7 @@ export type UserFindOneUserQuery = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -1068,6 +1081,7 @@ export type UserUpdateUserMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -1157,6 +1171,7 @@ export const UserDetailsFragmentDoc = gql`
     developer
     id
     name
+    onboarded
     profile
     profileUrl
     role
@@ -2257,6 +2272,7 @@ export function UserAdminUpdateInputSchema(): z.ZodObject<Properties<UserAdminUp
     avatarUrl: z.string().nullish(),
     developer: z.boolean().nullish(),
     name: z.string().nullish(),
+    onboarded: z.boolean().nullish(),
     role: UserRoleSchema.nullish(),
     status: UserStatusSchema.nullish(),
     username: z.string().nullish(),

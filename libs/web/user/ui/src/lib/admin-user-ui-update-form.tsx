@@ -15,6 +15,7 @@ export function AdminUiUpdateUserForm({
       avatarUrl: user.avatarUrl ?? user.avatarUrl ?? '',
       developer: user.developer,
       name: user.name ?? '',
+      onboarded: user.onboarded ?? false,
       role: user.role ?? UserRole.User,
       status: user.status ?? UserStatus.Created,
       username: user.username ?? '',
@@ -30,6 +31,7 @@ export function AdminUiUpdateUserForm({
         <TextInput name="name" label="Name" {...form.getInputProps('name')} />
         <TextInput name="avatarUrl" label="Avatar URL" {...form.getInputProps('avatarUrl')} />
         <Checkbox name="developer" label="Developer" {...form.getInputProps('developer', { type: 'checkbox' })} />
+        <Checkbox name="onboarded" label="Onboarded" {...form.getInputProps('onboarded', { type: 'checkbox' })} />
         <Group justify="right">
           <Button type="submit">Save</Button>
         </Group>

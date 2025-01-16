@@ -13,6 +13,8 @@ export class UserAdminUpdateInput {
   @Field({ nullable: true })
   developer?: boolean
   @Field({ nullable: true })
+  onboarded?: boolean
+  @Field({ nullable: true })
   name?: string
   @Field({ nullable: true })
   username?: string

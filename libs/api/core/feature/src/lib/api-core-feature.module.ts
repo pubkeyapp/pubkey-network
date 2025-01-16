@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { ApiAuthFeatureModule } from '@pubkey-network/api-auth-feature'
 import { ApiCoreDataAccessModule } from '@pubkey-network/api-core-data-access'
 import { ApiIdentityFeatureModule } from '@pubkey-network/api-identity-feature'
+import { ApiOnboardingFeatureModule } from '@pubkey-network/api-onboarding-feature'
 import { ApiProtocolFeatureModule } from '@pubkey-network/api-protocol-feature'
 import { ApiSolanaFeatureModule } from '@pubkey-network/api-solana-feature'
 import { ApiUserFeatureModule } from '@pubkey-network/api-user-feature'
@@ -13,6 +14,7 @@ const imports = [
   ApiAuthFeatureModule,
   ApiCoreDataAccessModule,
   ApiIdentityFeatureModule,
+  ApiOnboardingFeatureModule,
   ApiProtocolFeatureModule,
   ApiSolanaFeatureModule,
   ApiUserFeatureModule,
