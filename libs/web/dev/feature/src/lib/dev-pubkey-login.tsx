@@ -8,12 +8,12 @@ import {
   useGetPubKeyProfile,
   useGetUserProfile,
   usePubkeyProfileProgram,
-} from '@pubkey-network/web-profile-data-access'
+} from '@pubkey-network/web-protocol-data-access'
 import {
   ProfileUiPubKeyLoader,
   ProfileUiPubKeyProfile,
   PubkeyProfileUiCreateForm,
-} from '@pubkey-network/web-profile-ui'
+} from '@pubkey-network/web-protocol-ui'
 import {
   toastError,
   toastSuccess,

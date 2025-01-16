@@ -1,14 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { IdentityProvider } from '@prisma/client'
 import { ApiCoreService, BaseContext, getRequestDetails } from '@pubkey-network/api-core-data-access'
-import { ApiProfileService } from '@pubkey-network/api-profile-data-access'
+import { ApiProtocolService } from '@pubkey-network/api-protocol-data-access'
 import { verifySignature } from '@pubkeyapp/solana-verify-wallet'
 import { verifyValidPublicKey } from './helpers/verify-valid-publickey'
 
 @Injectable()
 export class ApiIdentitySolanaService {
   private readonly logger = new Logger(ApiIdentitySolanaService.name)
-  constructor(private readonly core: ApiCoreService, private readonly profile: ApiProfileService) {}
+  constructor(private readonly core: ApiCoreService, private readonly protocol: ApiProtocolService) {}
 
   ensureLinkProvider(provider: IdentityProvider) {
     if (provider !== IdentityProvider.Solana) {
@@ -97,6 +97,6 @@ export class ApiIdentitySolanaService {
   }
 
   async findPubKeyProfile(provider: IdentityProvider, providerId: string) {
-    return this.profile.getUserProfileByProviderNullable(provider, providerId)
+    return this.protocol.getUserProfileByProviderNullable(provider, providerId)
   }
 }

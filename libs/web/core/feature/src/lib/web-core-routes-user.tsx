@@ -1,5 +1,5 @@
 import { UiDashboard } from '@pubkey-network/web-core-ui'
-import { UserDirectoryRoutes, UserProfileRoutes } from '@pubkey-network/web-profile-feature'
+import { UserDirectoryRoutes, UserProfileRoutes } from '@pubkey-network/web-protocol-feature'
 import { SettingsFeature } from '@pubkey-network/web-settings-feature'
 import { SolanaFeature } from '@pubkey-network/web-solana-feature'
 import { UserFeature } from '@pubkey-network/web-user-feature'
