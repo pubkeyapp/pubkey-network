@@ -63,11 +63,12 @@ model User {
 
 enum IdentityProvider {
   Discord
-  GitHub
+  Farcaster
+  Github
   Google
   Solana
   Telegram
-  Twitter
+  X
 }
 
 enum UserRole {

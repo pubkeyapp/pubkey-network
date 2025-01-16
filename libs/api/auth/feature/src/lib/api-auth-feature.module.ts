@@ -4,7 +4,7 @@ import { ApiAuthStrategyDiscordController } from './api-auth-strategy-discord.co
 import { ApiAuthStrategyGithubController } from './api-auth-strategy-github.controller'
 import { ApiAuthStrategyGoogleController } from './api-auth-strategy-google.controller'
 import { ApiAuthStrategyTelegramController } from './api-auth-strategy-telegram.controller'
-import { ApiAuthStrategyTwitterController } from './api-auth-strategy-twitter.controller'
+import { ApiAuthStrategyXController } from './api-auth-strategy-x.controller'
 import { ApiAuthController } from './api-auth.controller'
 import { ApiAuthResolver } from './api-auth.resolver'
 
@@ -15,7 +15,7 @@ import { ApiAuthResolver } from './api-auth.resolver'
     ApiAuthStrategyGithubController,
     ApiAuthStrategyGoogleController,
     ApiAuthStrategyTelegramController,
-    ApiAuthStrategyTwitterController,
+    ApiAuthStrategyXController,
   ],
   imports: [ApiAuthDataAccessModule],
   providers: [ApiAuthResolver],

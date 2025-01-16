@@ -5,7 +5,7 @@ fragment AppConfigDetails on AppConfig {
   authPasswordEnabled
   authRegisterEnabled
   authSolanaEnabled
-  authTwitterEnabled
+  authXEnabled
   pubkeyProtocolSigner
   solanaEndpoint
 }

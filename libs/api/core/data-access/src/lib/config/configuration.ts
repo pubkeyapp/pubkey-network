@@ -42,11 +42,11 @@ export interface ApiCoreConfig {
   authTelegramAdminIds: string[]
   authTelegramBotToken: string
   authTelegramEnabled: boolean
-  // Twitter Authentication
-  authTwitterAdminIds: string[]
-  authTwitterConsumerKey: string
-  authTwitterConsumerSecret: string
-  authTwitterEnabled: boolean
+  // X Authentication
+  authXAdminIds: string[]
+  authXConsumerKey: string
+  authXConsumerSecret: string
+  authXEnabled: boolean
   // Username and Password Authentication
   authPasswordEnabled: boolean
   authRegisterEnabled: boolean
@@ -89,10 +89,10 @@ export function configuration(): ApiCoreConfig {
     authTelegramAdminIds: getFromEnvironment('AUTH_TELEGRAM_ADMIN_IDS'),
     authTelegramBotToken: process.env['AUTH_TELEGRAM_BOT_TOKEN'] as string,
     authTelegramEnabled: process.env['AUTH_TELEGRAM_ENABLED'] === 'true',
-    authTwitterAdminIds: getFromEnvironment('AUTH_TWITTER_ADMIN_IDS'),
-    authTwitterConsumerKey: process.env['AUTH_TWITTER_CONSUMER_KEY'] as string,
-    authTwitterConsumerSecret: process.env['AUTH_TWITTER_CONSUMER_SECRET'] as string,
-    authTwitterEnabled: process.env['AUTH_TWITTER_ENABLED'] === 'true',
+    authXAdminIds: getFromEnvironment('AUTH_X_ADMIN_IDS'),
+    authXConsumerKey: process.env['AUTH_X_CONSUMER_KEY'] as string,
+    authXConsumerSecret: process.env['AUTH_X_CONSUMER_SECRET'] as string,
+    authXEnabled: process.env['AUTH_X_ENABLED'] === 'true',
     authPasswordEnabled: process.env['AUTH_PASSWORD_ENABLED'] === 'true',
     authRegisterEnabled: process.env['AUTH_REGISTER_ENABLED'] === 'true',
     authSolanaAdminIds: getFromEnvironment('AUTH_SOLANA_ADMIN_IDS'),

@@ -19,7 +19,7 @@ export class ApiAuthStrategyGithub extends PassportStrategy(Strategy, 'github') 
     return this.service.validateRequest({
       req,
       providerId: profile.id,
-      provider: IdentityProvider.GitHub,
+      provider: IdentityProvider.Github,
       accessToken,
       refreshToken,
       profile: createGithubProfile(profile),

@@ -33,7 +33,7 @@ export type AppConfig = {
   authRegisterEnabled: Scalars['Boolean']['output']
   authSolanaEnabled: Scalars['Boolean']['output']
   authTelegramEnabled: Scalars['Boolean']['output']
-  authTwitterEnabled: Scalars['Boolean']['output']
+  authXEnabled: Scalars['Boolean']['output']
   pubkeyProtocolSigner: Scalars['String']['output']
   solanaEndpoint: Scalars['String']['output']
 }
@@ -81,11 +81,12 @@ export type IdentityChallenge = {
 
 export enum IdentityProvider {
   Discord = 'Discord',
-  GitHub = 'GitHub',
+  Farcaster = 'Farcaster',
+  Github = 'Github',
   Google = 'Google',
   Solana = 'Solana',
   Telegram = 'Telegram',
-  Twitter = 'Twitter',
+  X = 'X',
 }
 
 export type IdentityRequestChallengeInput = {
@@ -464,7 +465,7 @@ export type AppConfigDetailsFragment = {
   authPasswordEnabled: boolean
   authRegisterEnabled: boolean
   authSolanaEnabled: boolean
-  authTwitterEnabled: boolean
+  authXEnabled: boolean
   pubkeyProtocolSigner: string
   solanaEndpoint: string
 }
@@ -496,7 +497,7 @@ export type AppConfigQuery = {
     authPasswordEnabled: boolean
     authRegisterEnabled: boolean
     authSolanaEnabled: boolean
-    authTwitterEnabled: boolean
+    authXEnabled: boolean
     pubkeyProtocolSigner: string
     solanaEndpoint: string
   }
@@ -1084,7 +1085,7 @@ export const AppConfigDetailsFragmentDoc = gql`
     authPasswordEnabled
     authRegisterEnabled
     authSolanaEnabled
-    authTwitterEnabled
+    authXEnabled
     pubkeyProtocolSigner
     solanaEndpoint
   }

@@ -32,7 +32,7 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
       authRegisterEnabled,
       authSolanaEnabled,
       authTelegramEnabled,
-      authTwitterEnabled,
+      authXEnabled,
     } = appConfig as AppConfig
     return (
       authDiscordEnabled ||
@@ -42,7 +42,7 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
       authPasswordEnabled ||
       authSolanaEnabled ||
       authTelegramEnabled ||
-      authTwitterEnabled
+      authXEnabled
     )
   }, [appConfig])
 
@@ -51,11 +51,11 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
       appConfig
         ? ([
             appConfig.authDiscordEnabled && IdentityProvider.Discord,
-            appConfig.authGithubEnabled && IdentityProvider.GitHub,
+            appConfig.authGithubEnabled && IdentityProvider.Github,
             appConfig.authGoogleEnabled && IdentityProvider.Google,
             appConfig.authSolanaEnabled && IdentityProvider.Solana,
             appConfig.authTelegramEnabled && IdentityProvider.Telegram,
-            appConfig.authTwitterEnabled && IdentityProvider.Twitter,
+            appConfig.authXEnabled && IdentityProvider.X,
           ].filter(Boolean) as IdentityProvider[])
         : [],
     [appConfig],

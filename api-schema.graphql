@@ -10,7 +10,7 @@ type AppConfig {
   authRegisterEnabled: Boolean!
   authSolanaEnabled: Boolean!
   authTelegramEnabled: Boolean!
-  authTwitterEnabled: Boolean!
+  authXEnabled: Boolean!
   pubkeyProtocolSigner: String!
   solanaEndpoint: String!
 }
@@ -61,11 +61,12 @@ type IdentityChallenge {
 
 enum IdentityProvider {
   Discord
-  GitHub
+  Farcaster
+  Github
   Google
   Solana
   Telegram
-  Twitter
+  X
 }
 
 input IdentityRequestChallengeInput {

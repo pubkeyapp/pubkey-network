@@ -24,7 +24,7 @@ export class ApiCoreConfigService {
       authRegisterEnabled: this.authRegisterEnabled,
       authSolanaEnabled: this.authSolanaEnabled,
       authTelegramEnabled: this.authTelegramEnabled,
-      authTwitterEnabled: this.authTwitterEnabled,
+      authXEnabled: this.authXEnabled,
       pubkeyProtocolSigner: this.pubkeyProtocolSigner.publicKey.toString(),
       solanaEndpoint: this.solanaEndpointPublic,
     }
@@ -144,24 +144,20 @@ export class ApiCoreConfigService {
     return !(!this.authTelegramBotToken || !this.service.get<boolean>('authTelegramEnabled'))
   }
 
-  get authTwitterAdminIds() {
-    return this.service.get<string[]>('authTwitterAdminIds')
+  get authXAdminIds() {
+    return this.service.get<string[]>('authXAdminIds')
   }
 
-  get authTwitterConsumerKey() {
-    return this.service.get<string>('authTwitterConsumerKey')
+  get authXConsumerKey() {
+    return this.service.get<string>('authXConsumerKey')
   }
 
-  get authTwitterConsumerSecret() {
-    return this.service.get<string>('authTwitterConsumerSecret')
+  get authXConsumerSecret() {
+    return this.service.get<string>('authXConsumerSecret')
   }
 
-  get authTwitterEnabled(): boolean {
-    return !(
-      !this.authTwitterConsumerKey ||
-      !this.authTwitterConsumerSecret ||
-      !this.service.get<boolean>('authTwitterEnabled')
-    )
+  get authXEnabled(): boolean {
+    return !(!this.authXConsumerKey || !this.authXConsumerSecret || !this.service.get<boolean>('authXEnabled'))
   }
 
   get authPasswordEnabled(): boolean {
@@ -270,14 +266,14 @@ export class ApiCoreConfigService {
     switch (provider) {
       case IdentityProvider.Discord:
         return this.authDiscordAdminIds?.includes(providerId) ?? false
-      case IdentityProvider.GitHub:
+      case IdentityProvider.Github:
         return this.authGithubAdminIds?.includes(providerId) ?? false
       case IdentityProvider.Google:
         return this.authGoogleAdminIds?.includes(providerId) ?? false
       case IdentityProvider.Solana:
         return this.authSolanaAdminIds?.includes(providerId) ?? false
-      case IdentityProvider.Twitter:
-        return this.authTwitterAdminIds?.includes(providerId) ?? false
+      case IdentityProvider.X:
+        return this.authXAdminIds?.includes(providerId) ?? false
       default:
         return false
     }

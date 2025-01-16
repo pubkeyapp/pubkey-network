@@ -15,7 +15,7 @@ export function useGetIdentityUrl(identity: AppIdentity) {
       return `https://github.com/${identity.name ?? identity.providerId}`
     case 'solana':
       return getExplorerUrl(`address/${identity.providerId}`)
-    case 'twitter':
+    case 'x':
       return `https://x.com/${identity.name ?? identity.providerId}`
     default:
       return undefined

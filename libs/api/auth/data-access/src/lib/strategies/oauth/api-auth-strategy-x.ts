@@ -7,15 +7,15 @@ import type { ApiAuthRequest } from '../../interfaces/api-auth.request'
 import { ApiAuthStrategyService } from '../api-auth-strategy.service'
 
 @Injectable()
-export class ApiAuthStrategyTwitterGuard extends AuthGuard('twitter') {}
+export class ApiAuthStrategyXGuard extends AuthGuard('x') {}
 
 @Injectable()
-export class ApiAuthStrategyTwitter extends PassportStrategy(Strategy, 'twitter') {
+export class ApiAuthStrategyX extends PassportStrategy(Strategy, 'x') {
   constructor(private core: ApiCoreService, private service: ApiAuthStrategyService) {
     super({
-      consumerKey: core.config.authTwitterConsumerKey,
-      consumerSecret: core.config.authTwitterConsumerSecret,
-      callbackURL: core.config.webUrl + '/api/auth/twitter/callback',
+      consumerKey: core.config.authXConsumerKey,
+      consumerSecret: core.config.authXConsumerSecret,
+      callbackURL: core.config.webUrl + '/api/auth/x/callback',
       passReqToCallback: true,
     })
   }
@@ -24,15 +24,15 @@ export class ApiAuthStrategyTwitter extends PassportStrategy(Strategy, 'twitter'
     return this.service.validateRequest({
       req,
       providerId: profile.id,
-      provider: IdentityProvider.Twitter,
+      provider: IdentityProvider.X,
       accessToken,
       refreshToken,
-      profile: createTwitterProfile(profile),
+      profile: createXProfile(profile),
     })
   }
 }
 
-function createTwitterProfile(profile: Profile) {
+function createXProfile(profile: Profile) {
   return {
     externalId: profile.id,
     username: profile.username,

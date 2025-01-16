@@ -17,7 +17,7 @@ export class AppConfig {
   @Field()
   authTelegramEnabled!: boolean
   @Field()
-  authTwitterEnabled!: boolean
+  authXEnabled!: boolean
   @Field()
   pubkeyProtocolSigner!: string
   @Field()

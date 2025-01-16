@@ -4,7 +4,7 @@ import {
   IconBrandGithub,
   IconBrandGoogle,
   IconBrandTelegram,
-  IconBrandTwitter,
+  IconBrandX,
   IconCurrencySolana,
   IconQuestionMark,
 } from '@tabler/icons-react'
@@ -13,7 +13,7 @@ export function IdentityUiIcon({ provider, size }: { provider: IdentityProvider;
   switch (provider) {
     case IdentityProvider.Discord:
       return <IconBrandDiscord size={size} />
-    case IdentityProvider.GitHub:
+    case IdentityProvider.Github:
       return <IconBrandGithub size={size} />
     case IdentityProvider.Google:
       return <IconBrandGoogle size={size} />
@@ -21,8 +21,8 @@ export function IdentityUiIcon({ provider, size }: { provider: IdentityProvider;
       return <IconCurrencySolana size={size} />
     case IdentityProvider.Telegram:
       return <IconBrandTelegram size={size} />
-    case IdentityProvider.Twitter:
-      return <IconBrandTwitter size={size} />
+    case IdentityProvider.X:
+      return <IconBrandX size={size} />
     default:
       return <IconQuestionMark size={size} />
   }

@@ -22,11 +22,11 @@ export const validationSchema = Joi.object({
   AUTH_TELEGRAM_ADMIN_IDS: Joi.string(),
   AUTH_TELEGRAM_BOT_TOKEN: Joi.string(),
   AUTH_TELEGRAM_ENABLED: Joi.boolean().default(true),
-  // Twitter Authentication
-  AUTH_TWITTER_ADMIN_IDS: Joi.string(),
-  AUTH_TWITTER_CONSUMER_KEY: Joi.string(),
-  AUTH_TWITTER_CONSUMER_SECRET: Joi.string(),
-  AUTH_TWITTER_ENABLED: Joi.boolean().default(true),
+  // X Authentication
+  AUTH_X_ADMIN_IDS: Joi.string(),
+  AUTH_X_CONSUMER_KEY: Joi.string(),
+  AUTH_X_CONSUMER_SECRET: Joi.string(),
+  AUTH_X_ENABLED: Joi.boolean().default(true),
   // Username and Password Authentication
   AUTH_PASSWORD_ENABLED: Joi.boolean().default(true),
   AUTH_REGISTER_ENABLED: Joi.boolean().default(true),

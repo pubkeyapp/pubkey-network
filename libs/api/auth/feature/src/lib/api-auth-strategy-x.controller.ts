@@ -4,22 +4,22 @@ import {
   ApiAnonJwtGuard,
   ApiAuthRequest,
   ApiAuthService,
-  ApiAuthStrategyTwitterGuard,
+  ApiAuthStrategyXGuard,
 } from '@pubkey-network/api-auth-data-access'
 import { Response } from 'express-serve-static-core'
 
-@Controller('auth/twitter')
-export class ApiAuthStrategyTwitterController {
+@Controller('auth/x')
+export class ApiAuthStrategyXController {
   constructor(private readonly service: ApiAuthService) {}
 
   @Get()
-  @UseGuards(ApiAuthStrategyTwitterGuard)
+  @UseGuards(ApiAuthStrategyXGuard)
   redirect() {
     // This method triggers the OAuth2 flow
   }
 
   @Get('callback')
-  @UseGuards(ApiAnonJwtGuard, ApiAuthStrategyTwitterGuard)
+  @UseGuards(ApiAnonJwtGuard, ApiAuthStrategyXGuard)
   async callback(@Req() req: ApiAuthRequest, @Res({ passthrough: true }) res: Response) {
     return this.service.userCookieRedirect(req, res)
   }

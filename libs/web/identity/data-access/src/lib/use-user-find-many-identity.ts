@@ -29,11 +29,11 @@ export function useUserFindManyIdentity({ username }: { username: string }) {
       },
       [
         { provider: IdentityProvider.Discord, items: [] },
-        { provider: IdentityProvider.GitHub, items: [] },
+        { provider: IdentityProvider.Github, items: [] },
         { provider: IdentityProvider.Google, items: [] },
         { provider: IdentityProvider.Solana, items: [] },
         { provider: IdentityProvider.Telegram, items: [] },
-        { provider: IdentityProvider.Twitter, items: [] },
+        { provider: IdentityProvider.X, items: [] },
       ] as { provider: IdentityProvider; items: Identity[] }[],
     )
   }, [query.data])
@@ -46,7 +46,7 @@ export function useUserFindManyIdentity({ username }: { username: string }) {
     expiredDiscord: discordIdentity?.expired ?? false,
     grouped,
     hasDiscord: !!discordIdentity,
-    hasGithub: items.some((x) => x.provider === IdentityProvider.GitHub),
+    hasGithub: items.some((x) => x.provider === IdentityProvider.Github),
     hasSolana: items.some((x) => x.provider === IdentityProvider.Solana),
     items,
     query,

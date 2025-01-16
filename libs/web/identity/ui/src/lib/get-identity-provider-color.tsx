@@ -4,7 +4,7 @@ export function getIdentityProviderColor(provider: IdentityProvider) {
   switch (provider) {
     case IdentityProvider.Discord:
       return '#5865F2'
-    case IdentityProvider.GitHub:
+    case IdentityProvider.Github:
       return '#333333'
     case IdentityProvider.Google:
       return '#DB4437'
@@ -12,7 +12,7 @@ export function getIdentityProviderColor(provider: IdentityProvider) {
       return '#9945FF'
     case IdentityProvider.Telegram:
       return '#0088cc'
-    case IdentityProvider.Twitter:
+    case IdentityProvider.X:
       return '#1DA1F2'
     default:
       return '#333333'

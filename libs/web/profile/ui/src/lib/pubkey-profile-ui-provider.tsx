@@ -3,7 +3,7 @@ import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
   IconBrandGoogleFilled,
-  IconBrandTwitterFilled,
+  IconBrandXFilled,
   IconCurrencySolana,
   IconQuestionMark,
 } from '@tabler/icons-react'
@@ -18,8 +18,8 @@ export function PubkeyProfileUiProvider({ provider, size = 24 }: { provider: App
       return <IconBrandGoogleFilled size={size} />
     case 'solana':
       return <IconCurrencySolana size={size} />
-    case 'twitter':
-      return <IconBrandTwitterFilled size={size} />
+    case 'x':
+      return <IconBrandXFilled size={size} />
     default:
       return <IconQuestionMark size={size} />
   }

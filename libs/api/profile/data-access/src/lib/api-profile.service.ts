@@ -399,7 +399,7 @@ export function convertToIdentityProvider(provider: PrismaIdentityProvider): Ide
   switch (provider.toString()) {
     case 'Discord':
       return IdentityProvider.Discord
-    case 'GitHub':
+    case 'Github':
       return IdentityProvider.Github
     case 'Google':
       return IdentityProvider.Google

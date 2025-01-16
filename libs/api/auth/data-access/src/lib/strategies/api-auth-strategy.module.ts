@@ -4,7 +4,7 @@ import { ApiAuthStrategyDiscordModule } from './oauth/api-auth-strategy-discord.
 import { ApiAuthStrategyGithubModule } from './oauth/api-auth-strategy-github.module'
 import { ApiAuthStrategyGoogleModule } from './oauth/api-auth-strategy-google.module'
 import { ApiAuthStrategyTelegramModule } from './oauth/api-auth-strategy-telegram.module'
-import { ApiAuthStrategyTwitterModule } from './oauth/api-auth-strategy-twitter.module'
+import { ApiAuthStrategyXModule } from './oauth/api-auth-strategy-x.module'
 
 @Module({})
 export class ApiAuthStrategyModule {
@@ -16,7 +16,7 @@ export class ApiAuthStrategyModule {
         ApiAuthStrategyGithubModule.register(),
         ApiAuthStrategyGoogleModule.register(),
         ApiAuthStrategyTelegramModule.register(),
-        ApiAuthStrategyTwitterModule.register(),
+        ApiAuthStrategyXModule.register(),
       ],
     }
   }

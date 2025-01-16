@@ -17,9 +17,9 @@ export function IdentityUiLinkButton({
 }) {
   switch (provider) {
     case IdentityProvider.Discord:
-    case IdentityProvider.GitHub:
+    case IdentityProvider.Github:
     case IdentityProvider.Google:
-    case IdentityProvider.Twitter:
+    case IdentityProvider.X:
       return <IdentityUiProviderButton action="link" provider={provider} {...props} />
     case IdentityProvider.Telegram:
       return (
