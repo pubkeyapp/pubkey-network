@@ -26,7 +26,7 @@ export function UiHeaderProfile({ user, logout }: { user?: User | null; logout: 
         <Button p={0} variant={open ? 'light' : 'default'} radius="xl">
           <UiAvatar
             url={user?.avatarUrl}
-            name={user?.username}
+            name={user?.username ?? ''}
             alt={user?.username ?? 'User Avatar'}
             radius={100}
             size={34}

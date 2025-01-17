@@ -1,0 +1,7 @@
+query userGetOnboardingUsernames {
+  usernames: userGetOnboardingUsernames
+}
+
+query userGetOnboardingAvatarUrls {
+  avatarUrls: userGetOnboardingAvatarUrls
+}

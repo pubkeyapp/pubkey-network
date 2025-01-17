@@ -5,7 +5,7 @@ import { SettingsFeature } from '@pubkey-network/web-settings-feature'
 import { SolanaFeature } from '@pubkey-network/web-solana-feature'
 import { UserFeature } from '@pubkey-network/web-user-feature'
 import { UiDashboardItem, UiNotFound } from '@pubkey-ui/core'
-import { IconCurrencySolana, IconSettings, IconUser, IconUsers } from '@tabler/icons-react'
+import { IconCurrencySolana, IconSettings, IconStar, IconUser, IconUsers } from '@tabler/icons-react'
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
 
 const links: UiDashboardItem[] = [
@@ -14,6 +14,7 @@ const links: UiDashboardItem[] = [
   { label: 'Settings', icon: IconSettings, to: '/settings' },
   { label: 'Solana', icon: IconCurrencySolana, to: '/solana' },
   { label: 'Users', icon: IconUsers, to: '/u' },
+  { label: 'Onboarding', icon: IconStar, to: '/onboarding' },
 ]
 
 const routes: RouteObject[] = [

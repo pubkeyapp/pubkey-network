@@ -3,9 +3,9 @@ import { createContext, ReactNode, useContext } from 'react'
 
 const Context = createContext<Sdk>({} as Sdk)
 
-export function SdkProvider({ children }: { children: ReactNode }) {
-  const sdk: Sdk = getGraphQLSdk('/graphql')
+export const sdk: Sdk = getGraphQLSdk('/graphql')
 
+export function SdkProvider({ children }: { children: ReactNode }) {
   return <Context.Provider value={sdk}>{children}</Context.Provider>
 }
 

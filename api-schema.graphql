@@ -168,6 +168,8 @@ type Query {
   userFindManyIdentity(input: IdentityUserFindManyInput!): [Identity!]
   userFindManyUser(input: UserUserFindManyInput!): UserPaging!
   userFindOneUser(username: String!): User
+  userGetOnboardingAvatarUrls: [String!]
+  userGetOnboardingUsernames: [String!]
   userRequestIdentityChallenge(input: IdentityRequestChallengeInput!): IdentityChallenge
 }
 
@@ -210,6 +212,7 @@ input UserAdminUpdateInput {
   developer: Boolean
   name: String
   onboarded: Boolean
+  profile: String
   role: UserRole
   status: UserStatus
   username: String
