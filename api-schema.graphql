@@ -120,8 +120,27 @@ type Mutation {
   syncUserProfile: JSON
   userDeleteIdentity(identityId: String!): Boolean
   userLinkIdentity(input: IdentityUserLinkInput!): Identity
+  userOnboardingCreateProfile(publicKey: String!): [Int!]
+  userOnboardingCustomizeProfile(avatarUrl: String!, username: String!): Boolean
   userUpdateUser(input: UserUserUpdateInput!): User
   userVerifyIdentityChallenge(input: IdentityVerifyChallengeInput!): IdentityChallenge
+}
+
+type OnboardingRequirements {
+  profileAccount: String
+  socialIdentities: Int
+  solanaIdentities: Int
+  step: OnboardingStep!
+  validAvatarUrl: Boolean
+  validUsername: Boolean
+}
+
+enum OnboardingStep {
+  CreateProfile
+  CustomizeProfile
+  Finished
+  LinkSocialIdentities
+  LinkSolanaWallets
 }
 
 type PagingMeta {
@@ -138,7 +157,6 @@ type PubkeyProfile {
   authorities: [String!]!
   avatarUrl: String!
   bump: Int!
-  feePayer: String!
   identities: [PubkeyProfileIdentity!]!
   publicKey: String!
   username: String!
@@ -170,6 +188,7 @@ type Query {
   userFindOneUser(username: String!): User
   userGetOnboardingAvatarUrls: [String!]
   userGetOnboardingUsernames: [String!]
+  userOnboardingRequirements: OnboardingRequirements
   userRequestIdentityChallenge(input: IdentityRequestChallengeInput!): IdentityChallenge
 }
 

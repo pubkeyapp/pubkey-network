@@ -26,9 +26,9 @@ export function UserOnboardingStepLinkSocial() {
     <UiStack>
       <Text size="xl">Link your Social Identities</Text>
 
-      <UiInfo message={`${found.length} social identities linked`} />
+      <UiInfo message={`${found?.length} social identities linked`} />
 
-      {found.length ? (
+      {found?.length ? (
         <IdentityUiList showProvider items={found} refresh={query.refetch} deleteIdentity={deleteIdentity} />
       ) : null}
 

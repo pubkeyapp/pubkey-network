@@ -1,7 +1,30 @@
+fragment OnboardingRequirementsDetails on OnboardingRequirements {
+  profileAccount
+  socialIdentities
+  solanaIdentities
+  validUsername
+  validAvatarUrl
+  step
+}
+
 query userGetOnboardingUsernames {
   usernames: userGetOnboardingUsernames
 }
 
 query userGetOnboardingAvatarUrls {
   avatarUrls: userGetOnboardingAvatarUrls
+}
+
+query userOnboardingRequirements {
+  item: userOnboardingRequirements {
+    ...OnboardingRequirementsDetails
+  }
+}
+
+mutation userOnboardingCreateProfile($publicKey: String!) {
+  created: userOnboardingCreateProfile(publicKey: $publicKey)
+}
+
+mutation userOnboardingCustomizeProfile($username: String!, $avatarUrl: String!) {
+  updated: userOnboardingCustomizeProfile(username: $username, avatarUrl: $avatarUrl)
 }

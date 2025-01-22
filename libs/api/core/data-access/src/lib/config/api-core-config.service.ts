@@ -238,6 +238,10 @@ export class ApiCoreConfigService {
     return '/api'
   }
 
+  get pubkeyProtocolCommunity(): string {
+    return this.service.get<string>('pubkeyProtocolCommunity') as string
+  }
+
   get pubkeyProtocolSigner(): Keypair {
     return this.service.get<Keypair>('pubkeyProtocolSigner') as Keypair
   }

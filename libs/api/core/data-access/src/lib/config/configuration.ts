@@ -64,6 +64,7 @@ export interface ApiCoreConfig {
   jwtSecret: string
   port: number
   sessionSecret: string
+  pubkeyProtocolCommunity: string
   pubkeyProtocolSigner: Keypair
   pubkeyProtocolSignerMinimalBalance: number
   solanaEndpoint: string
@@ -106,6 +107,7 @@ export function configuration(): ApiCoreConfig {
     host: process.env['HOST'] as string,
     jwtSecret: process.env['JWT_SECRET'] as string,
     port: parseInt(process.env['PORT'] as string, 10) || 3000,
+    pubkeyProtocolCommunity: process.env['PUBKEY_PROTOCOL_COMMUNITY'] as string,
     pubkeyProtocolSigner: getKeypairFromByteArray(
       JSON.parse(process.env['PUBKEY_PROTOCOL_SIGNER_SECRET_KEY'] as string),
     ),
