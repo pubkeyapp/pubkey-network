@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
-import { IdentityProvider } from '@prisma/client'
+import { IdentityProvider, Prisma } from '@prisma/client'
 import { ApiCorePrismaClient, prismaClient } from './api-core-prisma-client'
 import { ApiCoreConfigService } from './config/api-core-config.service'
 import { slugifyId } from './helpers/slugify-id'
@@ -10,6 +10,17 @@ import { getEnvEnvTemplate } from './templates/get-env-env-template'
 export class ApiCoreService {
   readonly data: ApiCorePrismaClient = prismaClient
   constructor(readonly config: ApiCoreConfigService, readonly eventEmitter: EventEmitter2) {}
+
+  async ensureUserById(userId: string) {
+    const user = await this.data.user.findUnique({
+      where: { id: userId },
+      include: { identities: true },
+    })
+    if (!user) {
+      throw new Error(`User ${userId} not found`)
+    }
+    return user
+  }
 
   async findUserByIdentity({ provider, providerId }: { provider: IdentityProvider; providerId: string }) {
     return this.data.identity.findUnique({
@@ -44,5 +55,9 @@ export class ApiCoreService {
       where: { id: userId },
       include: { identities: true },
     })
+  }
+
+  async updateUserById(userId: string, data: Prisma.UserUpdateInput) {
+    return this.data.user.update({ where: { id: userId }, data })
   }
 }

@@ -136,6 +136,8 @@ export type Mutation = {
   syncUserProfile?: Maybe<Scalars['JSON']['output']>
   userDeleteIdentity?: Maybe<Scalars['Boolean']['output']>
   userLinkIdentity?: Maybe<Identity>
+  userOnboardingCreateProfile?: Maybe<Array<Scalars['Int']['output']>>
+  userOnboardingCustomizeProfile?: Maybe<Scalars['Boolean']['output']>
   userUpdateUser?: Maybe<User>
   userVerifyIdentityChallenge?: Maybe<IdentityChallenge>
 }
@@ -205,12 +207,39 @@ export type MutationUserLinkIdentityArgs = {
   input: IdentityUserLinkInput
 }
 
+export type MutationUserOnboardingCreateProfileArgs = {
+  publicKey: Scalars['String']['input']
+}
+
+export type MutationUserOnboardingCustomizeProfileArgs = {
+  avatarUrl: Scalars['String']['input']
+  username: Scalars['String']['input']
+}
+
 export type MutationUserUpdateUserArgs = {
   input: UserUserUpdateInput
 }
 
 export type MutationUserVerifyIdentityChallengeArgs = {
   input: IdentityVerifyChallengeInput
+}
+
+export type OnboardingRequirements = {
+  __typename?: 'OnboardingRequirements'
+  profileAccount?: Maybe<Scalars['String']['output']>
+  socialIdentities?: Maybe<Scalars['Int']['output']>
+  solanaIdentities?: Maybe<Scalars['Int']['output']>
+  step: OnboardingStep
+  validAvatarUrl?: Maybe<Scalars['Boolean']['output']>
+  validUsername?: Maybe<Scalars['Boolean']['output']>
+}
+
+export enum OnboardingStep {
+  CreateProfile = 'CreateProfile',
+  CustomizeProfile = 'CustomizeProfile',
+  Finished = 'Finished',
+  LinkSocialIdentities = 'LinkSocialIdentities',
+  LinkSolanaWallets = 'LinkSolanaWallets',
 }
 
 export type PagingMeta = {
@@ -229,7 +258,6 @@ export type PubkeyProfile = {
   authorities: Array<Scalars['String']['output']>
   avatarUrl: Scalars['String']['output']
   bump: Scalars['Int']['output']
-  feePayer: Scalars['String']['output']
   identities: Array<PubkeyProfileIdentity>
   publicKey: Scalars['String']['output']
   username: Scalars['String']['output']
@@ -261,6 +289,9 @@ export type Query = {
   userFindManyIdentity?: Maybe<Array<Identity>>
   userFindManyUser: UserPaging
   userFindOneUser?: Maybe<User>
+  userGetOnboardingAvatarUrls?: Maybe<Array<Scalars['String']['output']>>
+  userGetOnboardingUsernames?: Maybe<Array<Scalars['String']['output']>>
+  userOnboardingRequirements?: Maybe<OnboardingRequirements>
   userRequestIdentityChallenge?: Maybe<IdentityChallenge>
 }
 
@@ -330,6 +361,7 @@ export type User = {
   id: Scalars['String']['output']
   identities?: Maybe<Array<Identity>>
   name?: Maybe<Scalars['String']['output']>
+  onboarded?: Maybe<Scalars['Boolean']['output']>
   profile?: Maybe<Scalars['String']['output']>
   profileUrl: Scalars['String']['output']
   role?: Maybe<UserRole>
@@ -355,6 +387,8 @@ export type UserAdminUpdateInput = {
   avatarUrl?: InputMaybe<Scalars['String']['input']>
   developer?: InputMaybe<Scalars['Boolean']['input']>
   name?: InputMaybe<Scalars['String']['input']>
+  onboarded?: InputMaybe<Scalars['Boolean']['input']>
+  profile?: InputMaybe<Scalars['String']['input']>
   role?: InputMaybe<UserRole>
   status?: InputMaybe<UserStatus>
   username?: InputMaybe<Scalars['String']['input']>
@@ -402,6 +436,7 @@ export type LoginMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -428,6 +463,7 @@ export type RegisterMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -448,6 +484,7 @@ export type MeQuery = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -569,6 +606,7 @@ export type AdminFindManyIdentityQuery = {
       developer?: boolean | null
       id: string
       name?: string | null
+      onboarded?: boolean | null
       profile?: string | null
       profileUrl: string
       role?: UserRole | null
@@ -738,13 +776,58 @@ export type AnonVerifyIdentityChallengeMutation = {
   } | null
 }
 
+export type OnboardingRequirementsDetailsFragment = {
+  __typename?: 'OnboardingRequirements'
+  profileAccount?: string | null
+  socialIdentities?: number | null
+  solanaIdentities?: number | null
+  validUsername?: boolean | null
+  validAvatarUrl?: boolean | null
+  step: OnboardingStep
+}
+
+export type UserGetOnboardingUsernamesQueryVariables = Exact<{ [key: string]: never }>
+
+export type UserGetOnboardingUsernamesQuery = { __typename?: 'Query'; usernames?: Array<string> | null }
+
+export type UserGetOnboardingAvatarUrlsQueryVariables = Exact<{ [key: string]: never }>
+
+export type UserGetOnboardingAvatarUrlsQuery = { __typename?: 'Query'; avatarUrls?: Array<string> | null }
+
+export type UserOnboardingRequirementsQueryVariables = Exact<{ [key: string]: never }>
+
+export type UserOnboardingRequirementsQuery = {
+  __typename?: 'Query'
+  item?: {
+    __typename?: 'OnboardingRequirements'
+    profileAccount?: string | null
+    socialIdentities?: number | null
+    solanaIdentities?: number | null
+    validUsername?: boolean | null
+    validAvatarUrl?: boolean | null
+    step: OnboardingStep
+  } | null
+}
+
+export type UserOnboardingCreateProfileMutationVariables = Exact<{
+  publicKey: Scalars['String']['input']
+}>
+
+export type UserOnboardingCreateProfileMutation = { __typename?: 'Mutation'; created?: Array<number> | null }
+
+export type UserOnboardingCustomizeProfileMutationVariables = Exact<{
+  username: Scalars['String']['input']
+  avatarUrl: Scalars['String']['input']
+}>
+
+export type UserOnboardingCustomizeProfileMutation = { __typename?: 'Mutation'; updated?: boolean | null }
+
 export type PubkeyProfileDetailsFragment = {
   __typename?: 'PubkeyProfile'
   publicKey: string
   bump: number
   username: string
   avatarUrl: string
-  feePayer: string
   authorities: Array<string>
   identities: Array<{ __typename?: 'PubkeyProfileIdentity'; provider: string; providerId: string; name: string }>
 }
@@ -796,7 +879,6 @@ export type GetUserProfileQuery = {
     bump: number
     username: string
     avatarUrl: string
-    feePayer: string
     authorities: Array<string>
     identities: Array<{ __typename?: 'PubkeyProfileIdentity'; provider: string; providerId: string; name: string }>
   } | null
@@ -814,7 +896,6 @@ export type GetUserProfileByUsernameQuery = {
     bump: number
     username: string
     avatarUrl: string
-    feePayer: string
     authorities: Array<string>
     identities: Array<{ __typename?: 'PubkeyProfileIdentity'; provider: string; providerId: string; name: string }>
   } | null
@@ -833,7 +914,6 @@ export type GetUserProfileByProviderQuery = {
     bump: number
     username: string
     avatarUrl: string
-    feePayer: string
     authorities: Array<string>
     identities: Array<{ __typename?: 'PubkeyProfileIdentity'; provider: string; providerId: string; name: string }>
   } | null
@@ -856,6 +936,7 @@ export type UserDetailsFragment = {
   developer?: boolean | null
   id: string
   name?: string | null
+  onboarded?: boolean | null
   profile?: string | null
   profileUrl: string
   role?: UserRole | null
@@ -877,6 +958,7 @@ export type AdminCreateUserMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -907,6 +989,7 @@ export type AdminFindManyUserQuery = {
       developer?: boolean | null
       id: string
       name?: string | null
+      onboarded?: boolean | null
       profile?: string | null
       profileUrl: string
       role?: UserRole | null
@@ -953,6 +1036,7 @@ export type AdminFindOneUserQuery = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -976,6 +1060,7 @@ export type AdminUpdateUserMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -1000,6 +1085,7 @@ export type UserFindManyUserQuery = {
       developer?: boolean | null
       id: string
       name?: string | null
+      onboarded?: boolean | null
       profile?: string | null
       profileUrl: string
       role?: UserRole | null
@@ -1033,6 +1119,7 @@ export type UserFindOneUserQuery = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -1068,6 +1155,7 @@ export type UserUpdateUserMutation = {
     developer?: boolean | null
     id: string
     name?: string | null
+    onboarded?: boolean | null
     profile?: string | null
     profileUrl: string
     role?: UserRole | null
@@ -1129,6 +1217,16 @@ export const IdentityChallengeDetailsFragmentDoc = gql`
     verified
   }
 `
+export const OnboardingRequirementsDetailsFragmentDoc = gql`
+  fragment OnboardingRequirementsDetails on OnboardingRequirements {
+    profileAccount
+    socialIdentities
+    solanaIdentities
+    validUsername
+    validAvatarUrl
+    step
+  }
+`
 export const PubkeyProfileIdentityDetailsFragmentDoc = gql`
   fragment PubkeyProfileIdentityDetails on PubkeyProfileIdentity {
     provider
@@ -1142,7 +1240,6 @@ export const PubkeyProfileDetailsFragmentDoc = gql`
     bump
     username
     avatarUrl
-    feePayer
     authorities
     identities {
       ...PubkeyProfileIdentityDetails
@@ -1157,6 +1254,7 @@ export const UserDetailsFragmentDoc = gql`
     developer
     id
     name
+    onboarded
     profile
     profileUrl
     role
@@ -1288,6 +1386,34 @@ export const AnonVerifyIdentityChallengeDocument = gql`
     }
   }
   ${IdentityChallengeDetailsFragmentDoc}
+`
+export const UserGetOnboardingUsernamesDocument = gql`
+  query userGetOnboardingUsernames {
+    usernames: userGetOnboardingUsernames
+  }
+`
+export const UserGetOnboardingAvatarUrlsDocument = gql`
+  query userGetOnboardingAvatarUrls {
+    avatarUrls: userGetOnboardingAvatarUrls
+  }
+`
+export const UserOnboardingRequirementsDocument = gql`
+  query userOnboardingRequirements {
+    item: userOnboardingRequirements {
+      ...OnboardingRequirementsDetails
+    }
+  }
+  ${OnboardingRequirementsDetailsFragmentDoc}
+`
+export const UserOnboardingCreateProfileDocument = gql`
+  mutation userOnboardingCreateProfile($publicKey: String!) {
+    created: userOnboardingCreateProfile(publicKey: $publicKey)
+  }
+`
+export const UserOnboardingCustomizeProfileDocument = gql`
+  mutation userOnboardingCustomizeProfile($username: String!, $avatarUrl: String!) {
+    updated: userOnboardingCustomizeProfile(username: $username, avatarUrl: $avatarUrl)
+  }
 `
 export const CreateUserProfileDocument = gql`
   mutation createUserProfile($publicKey: String!) {
@@ -1454,6 +1580,11 @@ const UserVerifyIdentityChallengeDocumentString = print(UserVerifyIdentityChalle
 const UserLinkIdentityDocumentString = print(UserLinkIdentityDocument)
 const AnonRequestIdentityChallengeDocumentString = print(AnonRequestIdentityChallengeDocument)
 const AnonVerifyIdentityChallengeDocumentString = print(AnonVerifyIdentityChallengeDocument)
+const UserGetOnboardingUsernamesDocumentString = print(UserGetOnboardingUsernamesDocument)
+const UserGetOnboardingAvatarUrlsDocumentString = print(UserGetOnboardingAvatarUrlsDocument)
+const UserOnboardingRequirementsDocumentString = print(UserOnboardingRequirementsDocument)
+const UserOnboardingCreateProfileDocumentString = print(UserOnboardingCreateProfileDocument)
+const UserOnboardingCustomizeProfileDocumentString = print(UserOnboardingCustomizeProfileDocument)
 const CreateUserProfileDocumentString = print(CreateUserProfileDocument)
 const ProfileIdentityAddDocumentString = print(ProfileIdentityAddDocument)
 const ProfileIdentityRemoveDocumentString = print(ProfileIdentityRemoveDocument)
@@ -1773,6 +1904,112 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'anonVerifyIdentityChallenge',
+        'mutation',
+        variables,
+      )
+    },
+    userGetOnboardingUsernames(
+      variables?: UserGetOnboardingUsernamesQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: UserGetOnboardingUsernamesQuery
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<UserGetOnboardingUsernamesQuery>(UserGetOnboardingUsernamesDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'userGetOnboardingUsernames',
+        'query',
+        variables,
+      )
+    },
+    userGetOnboardingAvatarUrls(
+      variables?: UserGetOnboardingAvatarUrlsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: UserGetOnboardingAvatarUrlsQuery
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<UserGetOnboardingAvatarUrlsQuery>(UserGetOnboardingAvatarUrlsDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'userGetOnboardingAvatarUrls',
+        'query',
+        variables,
+      )
+    },
+    userOnboardingRequirements(
+      variables?: UserOnboardingRequirementsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: UserOnboardingRequirementsQuery
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<UserOnboardingRequirementsQuery>(UserOnboardingRequirementsDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'userOnboardingRequirements',
+        'query',
+        variables,
+      )
+    },
+    userOnboardingCreateProfile(
+      variables: UserOnboardingCreateProfileMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: UserOnboardingCreateProfileMutation
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<UserOnboardingCreateProfileMutation>(UserOnboardingCreateProfileDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'userOnboardingCreateProfile',
+        'mutation',
+        variables,
+      )
+    },
+    userOnboardingCustomizeProfile(
+      variables: UserOnboardingCustomizeProfileMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: UserOnboardingCustomizeProfileMutation
+      errors?: GraphQLError[]
+      extensions?: any
+      headers: Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<UserOnboardingCustomizeProfileMutation>(
+            UserOnboardingCustomizeProfileDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'userOnboardingCustomizeProfile',
         'mutation',
         variables,
       )
@@ -2172,6 +2409,8 @@ export const definedNonNullAnySchema = z.any().refine((v) => isDefinedNonNullAny
 
 export const IdentityProviderSchema = z.nativeEnum(IdentityProvider)
 
+export const OnboardingStepSchema = z.nativeEnum(OnboardingStep)
+
 export const UserRoleSchema = z.nativeEnum(UserRole)
 
 export const UserStatusSchema = z.nativeEnum(UserStatus)
@@ -2257,6 +2496,8 @@ export function UserAdminUpdateInputSchema(): z.ZodObject<Properties<UserAdminUp
     avatarUrl: z.string().nullish(),
     developer: z.boolean().nullish(),
     name: z.string().nullish(),
+    onboarded: z.boolean().nullish(),
+    profile: z.string().nullish(),
     role: UserRoleSchema.nullish(),
     status: UserStatusSchema.nullish(),
     username: z.string().nullish(),

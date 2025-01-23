@@ -1,6 +1,7 @@
 import { useAuth } from '@pubkey-network/web-auth-data-access'
 import { AuthLoginFeature, AuthRegisterFeature } from '@pubkey-network/web-auth-feature'
 import { HOME_ROUTES } from '@pubkey-network/web-home-feature'
+import { UserOnboardingFeature } from '@pubkey-network/web-onboarding-feature'
 import { UiNotFound } from '@pubkey-ui/core'
 import { lazy } from 'react'
 import { Navigate } from 'react-router-dom'
@@ -25,7 +26,7 @@ export function WebCoreRoutes() {
     ],
     full: [
       // Here you can add routes that are not part of the main layout, visit /custom-full-page to see this route
-      // { path: 'custom-full-page', element: <div>CUSTOM FULL PAGE</div> },
+      { path: '/onboarding/*', element: <UserOnboardingFeature /> },
     ],
     public: [
       // Routes for the auth feature

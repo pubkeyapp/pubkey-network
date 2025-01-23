@@ -52,6 +52,7 @@ model User {
   updatedAt  DateTime   @updatedAt
   avatarUrl  String?
   developer  Boolean    @default(false)
+  onboarded  Boolean    @default(false)
   name       String?
   profile    String?
   password   String? /// @encrypted

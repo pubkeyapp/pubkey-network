@@ -32,7 +32,7 @@ function createGoogleProfile(profile: Profile) {
   return {
     externalId: profile.id,
     username: (profile.emails as Array<{ value?: string }>)[0].value,
-    avatarUrl: profile.photos?.[0].value,
+    // avatarUrl: profile.photos?.[0].value,
     name: profile.displayName,
   }
 }

@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { Identity, IdentityProvider as PrismaIdentityProvider } from '@prisma/client'
 import { ApiCoreService } from '@pubkey-network/api-core-data-access'
 import { ApiSolanaService } from '@pubkey-network/api-solana-data-access'
 import {
   IdentityProvider as IdentityProvider,
   PUBKEY_PROTOCOL_PROGRAM_ID,
+  PubKeyCommunity,
   PubKeyProfile,
   PubKeyProtocolSdk,
 } from '@pubkey-protocol/sdk'
@@ -12,6 +13,8 @@ import { Keypair, PublicKey } from '@solana/web3.js'
 
 @Injectable()
 export class ApiProtocolService {
+  private readonly logger = new Logger(ApiProtocolService.name)
+  private community: PubKeyCommunity | undefined
   private readonly sdk: PubKeyProtocolSdk
   private readonly feePayer: Keypair
   private readonly validProviders: PrismaIdentityProvider[] = [
@@ -30,12 +33,21 @@ export class ApiProtocolService {
       provider: this.solana.getAnchorProvider(this.feePayer),
       programId: PUBKEY_PROTOCOL_PROGRAM_ID,
     })
+    this.loadCommunity()
+  }
+
+  async loadCommunity() {
+    this.community = await this.sdk.communityGet({ community: this.core.config.pubkeyProtocolCommunity })
+    this.logger.log(`Community loaded: ${this.community.name}`)
   }
 
   async createUserProfile(userId: string, publicKey: string) {
     const user = await this.core.getUserById(userId)
     if (!user) {
       throw new Error('User not found')
+    }
+    if (!this.community) {
+      throw new Error('Community not loaded')
     }
     const authority = ensureAuthority(user.identities, publicKey)
 
@@ -44,7 +56,7 @@ export class ApiProtocolService {
       avatarUrl: user.avatarUrl ?? '',
       feePayer: this.feePayer.publicKey,
       authority,
-      community: PublicKey.unique(),
+      community: this.community?.publicKey,
       name: user.username,
     })
 
@@ -64,6 +76,10 @@ export class ApiProtocolService {
     const provider = convertToIdentityProvider(identityProvider)
     this.ensureValidProvider(provider)
     const { user, profile } = await this.ensureUserProfile(userId)
+
+    if (!this.community) {
+      throw new Error('Community not loaded')
+    }
 
     const existing = profile.identities.find((i) => i.providerId === providerId && i.provider === provider)
     if (existing) {
@@ -88,7 +104,7 @@ export class ApiProtocolService {
       provider,
       providerId,
       name,
-      community: PublicKey.unique(),
+      community: this.community?.publicKey,
     })
     transaction.sign([this.feePayer])
 
@@ -209,7 +225,9 @@ export class ApiProtocolService {
       throw new Error('User not found')
     }
 
-    return this.sdk.profileGetByUsernameNullable({ username: user.username })
+    const res = await this.sdk.profileGetByUsernameNullable({ username: user.username })
+    console.log(`Profile found: ${res ? res.username : 'None'}`, res)
+    return res
   }
 
   async getUserProfileByUsername(username: string): Promise<PubKeyProfile | null> {
@@ -272,6 +290,13 @@ export class ApiProtocolService {
     if (!profile) {
       throw new Error('User profile not found')
     }
+    if (!user.profile) {
+      const updated = await this.core.data.user.update({
+        where: { id: userId },
+        data: { profile: profile.publicKey.toString(), onboarded: true },
+      })
+      this.logger.log(`Profile updated: ${updated.profile}`)
+    }
 
     return { user, profile }
   }
@@ -280,7 +305,7 @@ export class ApiProtocolService {
     const profile = await this.sdk.profileGetByUsernameNullable({ username })
 
     if (profile) {
-      console.log(`No profile found`)
+      console.log(`Profile found: ${profile.username}`)
       return profile
     }
 

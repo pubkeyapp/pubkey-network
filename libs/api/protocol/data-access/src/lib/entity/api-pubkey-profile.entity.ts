@@ -11,9 +11,6 @@ export class PubkeyProfile {
   @Field()
   avatarUrl?: string
 
-  @Field()
-  feePayer!: string
-
   @Field(() => [String])
   authorities!: string[]
 

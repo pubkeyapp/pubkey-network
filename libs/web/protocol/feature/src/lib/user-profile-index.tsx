@@ -11,6 +11,7 @@ export function UserProfileIndex() {
   if (query.data?.username) {
     return <Navigate to={`/profile/${query.data.username}`} replace />
   }
+
   return (
     <UserProfileLayout>
       {query.isLoading ? (
@@ -22,6 +23,7 @@ export function UserProfileIndex() {
         </UiStack>
       ) : (
         <UiStack>
+          <UiDebug data={query.data} />
           <UiInfo message="No profiles found. Click the button below to create one" />
           <Button component={NavLink} to="/profile/create">
             Create

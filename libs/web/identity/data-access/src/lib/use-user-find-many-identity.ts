@@ -50,7 +50,7 @@ export function useUserFindManyIdentity({ username }: { username: string }) {
     hasSolana: items.some((x) => x.provider === IdentityProvider.Solana),
     items,
     query,
-    deleteIdentity(identityId: string) {
+    async deleteIdentity(identityId: string) {
       if (!window.confirm('Are you sure?')) {
         return
       }

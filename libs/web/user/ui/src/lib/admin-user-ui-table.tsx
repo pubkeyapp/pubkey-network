@@ -68,7 +68,7 @@ export function AdminUserUiTable({
             width: '10%',
             textAlign: 'right',
             render: (item) => (
-              <Group gap="xs" justify="right">
+              <Group gap="xs" justify="right" wrap="nowrap">
                 <ActionIcon size="sm" variant="light" color="brand" component={Link} to={item.profileUrl}>
                   <IconUser size={16} />
                 </ActionIcon>

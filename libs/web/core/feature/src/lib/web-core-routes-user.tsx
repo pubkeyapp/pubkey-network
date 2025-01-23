@@ -1,10 +1,11 @@
+import { AuthUiUserOnboardedGuard } from '@pubkey-network/web-auth-ui'
 import { UiDashboard } from '@pubkey-network/web-core-ui'
 import { UserDirectoryRoutes, UserProfileRoutes } from '@pubkey-network/web-protocol-feature'
 import { SettingsFeature } from '@pubkey-network/web-settings-feature'
 import { SolanaFeature } from '@pubkey-network/web-solana-feature'
 import { UserFeature } from '@pubkey-network/web-user-feature'
 import { UiDashboardItem, UiNotFound } from '@pubkey-ui/core'
-import { IconCurrencySolana, IconSettings, IconUser, IconUsers } from '@tabler/icons-react'
+import { IconCurrencySolana, IconSettings, IconStar, IconUser, IconUsers } from '@tabler/icons-react'
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
 
 const links: UiDashboardItem[] = [
@@ -13,6 +14,7 @@ const links: UiDashboardItem[] = [
   { label: 'Settings', icon: IconSettings, to: '/settings' },
   { label: 'Solana', icon: IconCurrencySolana, to: '/solana' },
   { label: 'Users', icon: IconUsers, to: '/u' },
+  { label: 'Onboarding', icon: IconStar, to: '/onboarding' },
 ]
 
 const routes: RouteObject[] = [
@@ -26,9 +28,15 @@ const routes: RouteObject[] = [
 
 export default function WebCoreRoutesUser() {
   return useRoutes([
-    { index: true, element: <Navigate to="dashboard" replace /> },
-    { path: '/dashboard', element: <UiDashboard links={links} /> },
-    ...routes,
+    {
+      // This guard makes sure that the user is onboarded
+      element: <AuthUiUserOnboardedGuard />,
+      children: [
+        { index: true, element: <Navigate to="dashboard" replace /> },
+        { path: '/dashboard', element: <UiDashboard links={links} /> },
+        ...routes,
+      ],
+    },
     { path: '*', element: <UiNotFound to="/dashboard" /> },
   ])
 }

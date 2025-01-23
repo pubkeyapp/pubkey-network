@@ -15,6 +15,8 @@ export function AdminUiUpdateUserForm({
       avatarUrl: user.avatarUrl ?? user.avatarUrl ?? '',
       developer: user.developer,
       name: user.name ?? '',
+      onboarded: user.onboarded ?? false,
+      profile: user.profile ?? '',
       role: user.role ?? UserRole.User,
       status: user.status ?? UserStatus.Created,
       username: user.username ?? '',
@@ -26,10 +28,17 @@ export function AdminUiUpdateUserForm({
       <UiStack>
         <Select name="role" label="Role" data={getEnumOptions(UserRole)} {...form.getInputProps('role')} />
         <Select name="status" label="Status" data={getEnumOptions(UserStatus)} {...form.getInputProps('status')} />
+        <TextInput
+          name="profile"
+          label="Profile"
+          description="This is the account on Solana linked to this user profile."
+          {...form.getInputProps('profile')}
+        />
         <TextInput name="username" label="Username" {...form.getInputProps('username')} />
         <TextInput name="name" label="Name" {...form.getInputProps('name')} />
         <TextInput name="avatarUrl" label="Avatar URL" {...form.getInputProps('avatarUrl')} />
         <Checkbox name="developer" label="Developer" {...form.getInputProps('developer', { type: 'checkbox' })} />
+        <Checkbox name="onboarded" label="Onboarded" {...form.getInputProps('onboarded', { type: 'checkbox' })} />
         <Group justify="right">
           <Button type="submit">Save</Button>
         </Group>

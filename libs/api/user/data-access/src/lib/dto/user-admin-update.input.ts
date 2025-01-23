@@ -11,7 +11,11 @@ export class UserAdminUpdateInput {
   @Field({ nullable: true })
   avatarUrl?: string
   @Field({ nullable: true })
+  profile?: string
+  @Field({ nullable: true })
   developer?: boolean
+  @Field({ nullable: true })
+  onboarded?: boolean
   @Field({ nullable: true })
   name?: string
   @Field({ nullable: true })

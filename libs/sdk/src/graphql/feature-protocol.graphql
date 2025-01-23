@@ -3,7 +3,6 @@ fragment PubkeyProfileDetails on PubkeyProfile {
   bump
   username
   avatarUrl
-  feePayer
   authorities
   identities {
     ...PubkeyProfileIdentityDetails
